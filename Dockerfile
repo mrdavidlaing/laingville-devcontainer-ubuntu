@@ -48,8 +48,8 @@ RUN case "${TARGETARCH}" in \
       *) echo "unsupported TARGETARCH=${TARGETARCH}" >&2; exit 1 ;; \
     esac \
  && cd /tmp \
- && curl -fsSLO "https://github.com/junegunn/fzf/releases/download/${FZF_VERSION}/fzf-${FZF_VERSION}-linux_${arch}.tar.gz" \
- && curl -fsSLO "https://github.com/junegunn/fzf/releases/download/${FZF_VERSION}/fzf_${FZF_VERSION}_checksums.txt" \
+ && curl -fsSLO "https://github.com/junegunn/fzf/releases/download/v${FZF_VERSION}/fzf-${FZF_VERSION}-linux_${arch}.tar.gz" \
+ && curl -fsSLO "https://github.com/junegunn/fzf/releases/download/v${FZF_VERSION}/fzf_${FZF_VERSION}_checksums.txt" \
  && grep "fzf-${FZF_VERSION}-linux_${arch}\\.tar\\.gz$" fzf_${FZF_VERSION}_checksums.txt | sha256sum -c - \
  && tar -C /usr/local/bin -xzf "fzf-${FZF_VERSION}-linux_${arch}.tar.gz" fzf \
  && chmod +x /usr/local/bin/fzf \

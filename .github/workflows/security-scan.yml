@@ -13,6 +13,7 @@ on:
 env:
   REGISTRY: ghcr.io
   IMAGE_REPO: ghcr.io/mrdavidlaing/laingville-devcontainer-ubuntu
+  USE_LOCAL_BUILD: ${{ github.event_name == 'pull_request' }}
 
 jobs:
   trivy-scan:
@@ -34,24 +35,46 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Set up Docker Buildx
+        if: env.USE_LOCAL_BUILD == 'true'
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build image locally (PR)
+        if: env.USE_LOCAL_BUILD == 'true'
+        id: build-local
+        run: |
+          docker buildx build --load --target "${{ matrix.image }}" -t "local/${{ matrix.image }}:scan" .
+          echo "ref=local/${{ matrix.image }}:scan" >> "$GITHUB_OUTPUT"
+
       - name: Log in to GHCR
+        if: env.USE_LOCAL_BUILD != 'true'
         uses: docker/login-action@v3
         with:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Pull image
+      - name: Pull image (main/schedule)
+        if: env.USE_LOCAL_BUILD != 'true'
         id: pull
         run: |
           REF="${{ env.IMAGE_REPO }}/${{ matrix.image }}:latest"
           docker pull "$REF"
           echo "ref=$REF" >> "$GITHUB_OUTPUT"
 
+      - name: Set image reference
+        id: image
+        run: |
+          if [ "${{ env.USE_LOCAL_BUILD }}" = "true" ]; then
+            echo "ref=${{ steps.build-local.outputs.ref }}" >> "$GITHUB_OUTPUT"
+          else
+            echo "ref=${{ steps.pull.outputs.ref }}" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@master
         with:
-          image-ref: '${{ steps.pull.outputs.ref }}'
+          image-ref: '${{ steps.image.outputs.ref }}'
           format: 'sarif'
           output: 'trivy-${{ matrix.image }}.sarif'
           severity: 'CRITICAL,HIGH,MEDIUM'
@@ -68,7 +91,7 @@ jobs:
       - name: Run Trivy (table output for logs)
         uses: aquasecurity/trivy-action@master
         with:
-          image-ref: '${{ steps.pull.outputs.ref }}'
+          image-ref: '${{ steps.image.outputs.ref }}'
           format: 'table'
           severity: 'CRITICAL,HIGH'
         continue-on-error: true
@@ -92,25 +115,47 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Set up Docker Buildx
+        if: env.USE_LOCAL_BUILD == 'true'
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build image locally (PR)
+        if: env.USE_LOCAL_BUILD == 'true'
+        id: build-local
+        run: |
+          docker buildx build --load --target "${{ matrix.image }}" -t "local/${{ matrix.image }}:scan" .
+          echo "ref=local/${{ matrix.image }}:scan" >> "$GITHUB_OUTPUT"
+
       - name: Log in to GHCR
+        if: env.USE_LOCAL_BUILD != 'true'
         uses: docker/login-action@v3
         with:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Pull image
+      - name: Pull image (main/schedule)
+        if: env.USE_LOCAL_BUILD != 'true'
         id: pull
         run: |
           REF="${{ env.IMAGE_REPO }}/${{ matrix.image }}:latest"
           docker pull "$REF"
           echo "ref=$REF" >> "$GITHUB_OUTPUT"
 
+      - name: Set image reference
+        id: image
+        run: |
+          if [ "${{ env.USE_LOCAL_BUILD }}" = "true" ]; then
+            echo "ref=${{ steps.build-local.outputs.ref }}" >> "$GITHUB_OUTPUT"
+          else
+            echo "ref=${{ steps.pull.outputs.ref }}" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Run Grype scanner
         uses: anchore/scan-action@v4
         id: grype
         with:
-          image: '${{ steps.pull.outputs.ref }}'
+          image: '${{ steps.image.outputs.ref }}'
           fail-build: false
           severity-cutoff: high
           output-format: sarif
@@ -141,24 +186,46 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Set up Docker Buildx
+        if: env.USE_LOCAL_BUILD == 'true'
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build image locally (PR)
+        if: env.USE_LOCAL_BUILD == 'true'
+        id: build-local
+        run: |
+          docker buildx build --load --target "${{ matrix.image }}" -t "local/${{ matrix.image }}:scan" .
+          echo "ref=local/${{ matrix.image }}:scan" >> "$GITHUB_OUTPUT"
+
       - name: Log in to GHCR
+        if: env.USE_LOCAL_BUILD != 'true'
         uses: docker/login-action@v3
         with:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Pull image
+      - name: Pull image (main/schedule)
+        if: env.USE_LOCAL_BUILD != 'true'
         id: pull
         run: |
           REF="${{ env.IMAGE_REPO }}/${{ matrix.image }}:latest"
           docker pull "$REF"
           echo "ref=$REF" >> "$GITHUB_OUTPUT"
 
+      - name: Set image reference
+        id: image
+        run: |
+          if [ "${{ env.USE_LOCAL_BUILD }}" = "true" ]; then
+            echo "ref=${{ steps.build-local.outputs.ref }}" >> "$GITHUB_OUTPUT"
+          else
+            echo "ref=${{ steps.pull.outputs.ref }}" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Generate SBOM with Syft (SPDX)
         uses: anchore/sbom-action@v0
         with:
-          image: '${{ steps.pull.outputs.ref }}'
+          image: '${{ steps.image.outputs.ref }}'
           format: spdx-json
           output-file: 'sbom-${{ matrix.image }}-spdx.json'
         continue-on-error: true
@@ -166,7 +233,7 @@ jobs:
       - name: Generate SBOM with Syft (CycloneDX)
         uses: anchore/sbom-action@v0
         with:
-          image: '${{ steps.pull.outputs.ref }}'
+          image: '${{ steps.image.outputs.ref }}'
           format: cyclonedx-json
           output-file: 'sbom-${{ matrix.image }}-cyclonedx.json'
         continue-on-error: true

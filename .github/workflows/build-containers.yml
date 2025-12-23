@@ -1,9 +1,10 @@
 name: Build Containers
 
 on:
+  pull_request: {}
   push:
     branches: [main]
-  workflow_dispatch:
+  workflow_dispatch: {}
 
 env:
   REGISTRY: ghcr.io
@@ -74,6 +75,7 @@ jobs:
           esac
 
       - name: Log in to GHCR
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         uses: docker/login-action@v3
         with:
           registry: ${{ env.REGISTRY }}
@@ -81,6 +83,7 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Push arch-specific tag
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         run: |
           IMAGE_BASE="${{ env.IMAGE_REPO }}/${{ matrix.image }}"
           DATE="${{ steps.tags.outputs.date }}"
@@ -89,6 +92,7 @@ jobs:
           docker push "$ARCH_TAG"
 
   create-manifests:
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     needs: build-images
     runs-on: ubuntu-24.04
     permissions:

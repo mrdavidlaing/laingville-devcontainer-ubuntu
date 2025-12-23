@@ -1,0 +1,7 @@
+.git
+.github
+
+# docs / artifacts
+*.sarif
+*.spdx.json
+*.cyclonedx.json

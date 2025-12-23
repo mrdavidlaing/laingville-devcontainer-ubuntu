@@ -1,0 +1,219 @@
+name: Security Scan
+
+on:
+  schedule:
+    - cron: '0 6 * * *'  # Daily at 6am UTC
+  workflow_run:
+    workflows: ["Build Containers"]
+    types: [completed]
+    branches: [main]
+  pull_request: {}
+  workflow_dispatch: {}
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_REPO: ghcr.io/mrdavidlaing/laingville-devcontainer-ubuntu
+
+jobs:
+  trivy-scan:
+    name: Trivy (Container Scanner)
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: read
+      security-events: write
+    strategy:
+      fail-fast: false
+      matrix:
+        image:
+          - laingville-devcontainer
+          - example-node-devcontainer
+          - example-node-runtime
+          - example-python-devcontainer
+          - example-python-runtime
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Log in to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Pull image
+        id: pull
+        run: |
+          REF="${{ env.IMAGE_REPO }}/${{ matrix.image }}:latest"
+          docker pull "$REF"
+          echo "ref=$REF" >> "$GITHUB_OUTPUT"
+
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: '${{ steps.pull.outputs.ref }}'
+          format: 'sarif'
+          output: 'trivy-${{ matrix.image }}.sarif'
+          severity: 'CRITICAL,HIGH,MEDIUM'
+          vuln-type: 'os,library'
+        continue-on-error: true
+
+      - name: Upload Trivy SARIF to GitHub Security
+        uses: github/codeql-action/upload-sarif@v4
+        with:
+          sarif_file: 'trivy-${{ matrix.image }}.sarif'
+          category: 'trivy-${{ matrix.image }}'
+        continue-on-error: true
+
+      - name: Run Trivy (table output for logs)
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: '${{ steps.pull.outputs.ref }}'
+          format: 'table'
+          severity: 'CRITICAL,HIGH'
+        continue-on-error: true
+
+  grype-scan:
+    name: Grype (Anchore Scanner)
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: read
+      security-events: write
+    strategy:
+      fail-fast: false
+      matrix:
+        image:
+          - laingville-devcontainer
+          - example-node-devcontainer
+          - example-node-runtime
+          - example-python-devcontainer
+          - example-python-runtime
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Log in to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Pull image
+        id: pull
+        run: |
+          REF="${{ env.IMAGE_REPO }}/${{ matrix.image }}:latest"
+          docker pull "$REF"
+          echo "ref=$REF" >> "$GITHUB_OUTPUT"
+
+      - name: Run Grype scanner
+        uses: anchore/scan-action@v4
+        id: grype
+        with:
+          image: '${{ steps.pull.outputs.ref }}'
+          fail-build: false
+          severity-cutoff: high
+          output-format: sarif
+        continue-on-error: true
+
+      - name: Upload Grype SARIF to GitHub Security
+        uses: github/codeql-action/upload-sarif@v4
+        with:
+          sarif_file: ${{ steps.grype.outputs.sarif }}
+          category: 'grype-${{ matrix.image }}'
+        continue-on-error: true
+
+  syft-sbom:
+    name: Syft (SBOM Generator)
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: read
+    strategy:
+      fail-fast: false
+      matrix:
+        image:
+          - laingville-devcontainer
+          - example-node-devcontainer
+          - example-node-runtime
+          - example-python-devcontainer
+          - example-python-runtime
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Log in to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Pull image
+        id: pull
+        run: |
+          REF="${{ env.IMAGE_REPO }}/${{ matrix.image }}:latest"
+          docker pull "$REF"
+          echo "ref=$REF" >> "$GITHUB_OUTPUT"
+
+      - name: Generate SBOM with Syft (SPDX)
+        uses: anchore/sbom-action@v0
+        with:
+          image: '${{ steps.pull.outputs.ref }}'
+          format: spdx-json
+          output-file: 'sbom-${{ matrix.image }}-spdx.json'
+        continue-on-error: true
+
+      - name: Generate SBOM with Syft (CycloneDX)
+        uses: anchore/sbom-action@v0
+        with:
+          image: '${{ steps.pull.outputs.ref }}'
+          format: cyclonedx-json
+          output-file: 'sbom-${{ matrix.image }}-cyclonedx.json'
+        continue-on-error: true
+
+      - name: Upload SBOM artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: sbom-${{ matrix.image }}
+          path: |
+            sbom-${{ matrix.image }}-spdx.json
+            sbom-${{ matrix.image }}-cyclonedx.json
+        continue-on-error: true
+
+  gitleaks-scan:
+    name: Gitleaks (Secret Scanner)
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      security-events: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Run Gitleaks
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        continue-on-error: true
+
+  security-summary:
+    name: Security Summary
+    runs-on: ubuntu-latest
+    needs: [trivy-scan, grype-scan, syft-sbom, gitleaks-scan]
+    if: always()
+    steps:
+      - name: Generate summary
+        run: |
+          echo "## Security Scan Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Scanner | Status |" >> $GITHUB_STEP_SUMMARY
+          echo "|---------|--------|" >> $GITHUB_STEP_SUMMARY
+          echo "| Trivy (Container) | ${{ needs.trivy-scan.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Grype (Anchore) | ${{ needs.grype-scan.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Syft (SBOM) | ${{ needs.syft-sbom.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Gitleaks (Secrets) | ${{ needs.gitleaks-scan.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Notes" >> $GITHUB_STEP_SUMMARY
+          echo "- SARIF results uploaded to GitHub Security tab" >> $GITHUB_STEP_SUMMARY
+          echo "- SBOM artifacts available in workflow artifacts" >> $GITHUB_STEP_SUMMARY

@@ -1,0 +1,144 @@
+name: Build Containers
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_REPO: ghcr.io/mrdavidlaing/laingville-devcontainer-ubuntu
+
+jobs:
+  build-images:
+    strategy:
+      matrix:
+        image:
+          - laingville-devcontainer
+          - example-node-devcontainer
+          - example-node-runtime
+          - example-python-devcontainer
+          - example-python-runtime
+        arch:
+          - amd64
+          - arm64
+        include:
+          - arch: amd64
+            runner: ubuntu-24.04
+          - arch: arm64
+            runner: ubuntu-24.04-arm
+
+    runs-on: ${{ matrix.runner }}
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Generate tags
+        id: tags
+        run: |
+          DATE=$(date +%Y-%m-%d)
+          SHA=$(git rev-parse --short HEAD)
+          echo "date=${DATE}" >> "$GITHUB_OUTPUT"
+          echo "sha=${SHA}" >> "$GITHUB_OUTPUT"
+
+      - name: Build (load) for testing
+        run: |
+          docker buildx build \
+            --platform linux/${{ matrix.arch }} \
+            --target ${{ matrix.image }} \
+            --load \
+            -t local/${{ matrix.image }}:test \
+            .
+
+      - name: Run tests
+        run: |
+          case "${{ matrix.image }}" in
+            *node*)
+              docker run --rm \
+                -v "${{ github.workspace }}/tests:/tests:ro" \
+                local/${{ matrix.image }}:test \
+                bash /tests/test-node-environment.sh
+              ;;
+            *python*)
+              docker run --rm local/${{ matrix.image }}:test python3 --version
+              ;;
+            *)
+              docker run --rm local/${{ matrix.image }}:test bash -lc 'echo "Container starts successfully"'
+              ;;
+          esac
+
+      - name: Log in to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Push arch-specific tag
+        run: |
+          IMAGE_BASE="${{ env.IMAGE_REPO }}/${{ matrix.image }}"
+          DATE="${{ steps.tags.outputs.date }}"
+          ARCH_TAG="${IMAGE_BASE}:${DATE}-${{ matrix.arch }}"
+          docker tag "local/${{ matrix.image }}:test" "$ARCH_TAG"
+          docker push "$ARCH_TAG"
+
+  create-manifests:
+    needs: build-images
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+      packages: write
+
+    strategy:
+      matrix:
+        image:
+          - laingville-devcontainer
+          - example-node-devcontainer
+          - example-node-runtime
+          - example-python-devcontainer
+          - example-python-runtime
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Generate tags
+        id: tags
+        run: |
+          DATE=$(date +%Y-%m-%d)
+          SHA=$(git rev-parse --short HEAD)
+          echo "date=${DATE}" >> "$GITHUB_OUTPUT"
+          echo "sha=${SHA}" >> "$GITHUB_OUTPUT"
+
+      - name: Log in to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Create and push manifests
+        run: |
+          IMAGE_BASE="${{ env.IMAGE_REPO }}/${{ matrix.image }}"
+          DATE="${{ steps.tags.outputs.date }}"
+          SHA="${{ steps.tags.outputs.sha }}"
+
+          docker manifest create "${IMAGE_BASE}:${DATE}" \
+            "${IMAGE_BASE}:${DATE}-amd64" \
+            "${IMAGE_BASE}:${DATE}-arm64"
+          docker manifest push "${IMAGE_BASE}:${DATE}"
+
+          docker manifest create "${IMAGE_BASE}:${DATE}-${SHA}" \
+            "${IMAGE_BASE}:${DATE}-amd64" \
+            "${IMAGE_BASE}:${DATE}-arm64"
+          docker manifest push "${IMAGE_BASE}:${DATE}-${SHA}"
+
+          docker manifest create "${IMAGE_BASE}:latest" \
+            "${IMAGE_BASE}:${DATE}-amd64" \
+            "${IMAGE_BASE}:${DATE}-arm64"
+          docker manifest push "${IMAGE_BASE}:latest"

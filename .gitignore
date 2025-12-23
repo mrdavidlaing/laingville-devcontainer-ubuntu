@@ -1,0 +1,9 @@
+# local artifacts
+*.sarif
+*.spdx.json
+*.cyclonedx.json
+
+# editor
+.DS_Store
+.idea/
+.vscode/

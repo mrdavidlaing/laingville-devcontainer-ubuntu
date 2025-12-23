@@ -16,6 +16,8 @@ ARG UBUNTU_IMAGE=ubuntu:24.04
 # base: shared OS + common tools
 ############################
 FROM ${UBUNTU_IMAGE} AS base
+ARG TARGETARCH
+ARG FZF_VERSION=0.67.0
 SHELL ["/bin/bash", "-euxo", "pipefail", "-c"]
 
 ENV DEBIAN_FRONTEND=noninteractive \
@@ -33,11 +35,25 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
       tar gzip xz-utils bzip2 unzip zip \
       git openssh-client \
       sudo \
-      jq ripgrep fd-find fzf bat \
+      jq ripgrep fd-find bat \
       less procps \
  && rm -rf /var/lib/apt/lists/*
 
 RUN locale-gen en_US.UTF-8
+
+# fzf (upstream binary with checksum verification)
+RUN case "${TARGETARCH}" in \
+      amd64) arch="amd64" ;; \
+      arm64) arch="arm64" ;; \
+      *) echo "unsupported TARGETARCH=${TARGETARCH}" >&2; exit 1 ;; \
+    esac \
+ && cd /tmp \
+ && curl -fsSLO "https://github.com/junegunn/fzf/releases/download/${FZF_VERSION}/fzf-${FZF_VERSION}-linux_${arch}.tar.gz" \
+ && curl -fsSLO "https://github.com/junegunn/fzf/releases/download/${FZF_VERSION}/fzf_${FZF_VERSION}_checksums.txt" \
+ && grep "fzf-${FZF_VERSION}-linux_${arch}\\.tar\\.gz$" fzf_${FZF_VERSION}_checksums.txt | sha256sum -c - \
+ && tar -C /usr/local/bin -xzf "fzf-${FZF_VERSION}-linux_${arch}.tar.gz" fzf \
+ && chmod +x /usr/local/bin/fzf \
+ && rm -f "fzf-${FZF_VERSION}-linux_${arch}.tar.gz" fzf_${FZF_VERSION}_checksums.txt
 
 # Ubuntu binary name quirks: bat -> batcat, fd -> fdfind
 RUN ln -sf /usr/bin/batcat /usr/local/bin/bat || true \
@@ -50,7 +66,7 @@ FROM base AS bashdev
 ARG TARGETARCH
 ARG JUST_VERSION=1.40.0
 ARG STARSHIP_VERSION=1.22.1
-ARG SHFMT_VERSION=3.10.0
+ARG SHFMT_VERSION=3.12.0
 ARG SHELLSPEC_VERSION=0.28.1
 
 RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
@@ -82,10 +98,14 @@ RUN case "${TARGETARCH}" in \
  && tar -C /usr/local/bin -xzf /tmp/starship.tgz starship \
  && rm -f /tmp/starship.tgz
 
-# shfmt
-RUN curl -fsSLo /usr/local/bin/shfmt \
-      "https://github.com/mvdan/sh/releases/download/v${SHFMT_VERSION}/shfmt_v${SHFMT_VERSION}_linux_${TARGETARCH}" \
- && chmod +x /usr/local/bin/shfmt
+# shfmt (with checksum verification)
+RUN cd /tmp \
+ && curl -fsSLO "https://github.com/mvdan/sh/releases/download/v${SHFMT_VERSION}/sha256sums.txt" \
+ && curl -fsSLO "https://github.com/mvdan/sh/releases/download/v${SHFMT_VERSION}/shfmt_v${SHFMT_VERSION}_linux_${TARGETARCH}" \
+ && grep "shfmt_v${SHFMT_VERSION}_linux_${TARGETARCH}$" sha256sums.txt | sha256sum -c - \
+ && mv "shfmt_v${SHFMT_VERSION}_linux_${TARGETARCH}" /usr/local/bin/shfmt \
+ && chmod +x /usr/local/bin/shfmt \
+ && rm -f sha256sums.txt
 
 # shellspec (git checkout of a tagged release)
 RUN git clone --depth 1 --branch "${SHELLSPEC_VERSION}" \

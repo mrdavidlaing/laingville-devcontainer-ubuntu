@@ -44,6 +44,16 @@ run_test() {
       docker run --rm "$image_ref" bash -lc 'echo "Container starts successfully"'
       ;;
   esac
+
+  # All containers should have fzf (installed in base stage)
+  echo "Checking fzf installation..."
+  docker run --rm "$image_ref" fzf --version > /dev/null
+
+  # Only laingville-devcontainer should have shfmt (installed in bashdev stage)
+  if [ "$container" = "laingville-devcontainer" ]; then
+    echo "Checking shfmt installation..."
+    docker run --rm "$image_ref" shfmt --version > /dev/null
+  fi
 }
 
 build_image() {

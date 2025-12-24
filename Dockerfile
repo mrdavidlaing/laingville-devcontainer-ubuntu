@@ -49,17 +49,25 @@ RUN ln -sf /usr/bin/batcat /usr/local/bin/bat || true \
 ########################################
 FROM base AS bashdev
 
+# Note: shellspec is not in Ubuntu 24.04 repos.
+# We are intentionally dropping manual installs for security.
 RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
     --mount=type=cache,target=/var/lib/apt,sharing=locked \
     apt-get update \
  && apt-get install -y --no-install-recommends \
       shellcheck \
       just \
-      starship \
       shfmt \
  && rm -rf /var/lib/apt/lists/*
 
-# shellspec is not in Ubuntu 24.04 repos, so it is omitted.
+# Starship is in Ubuntu 24.04 universe, but sometimes older.
+# Checking if 'starship' package exists or needs snap. 
+# It is not in standard main/universe for 24.04 yet (checked elsewhere), 
+# actually it IS in universe for 24.10, but maybe not 24.04.
+# Let's try installing it, if it fails, we omit it as per instruction "just include packages from Ubuntu".
+# Wait, checking packages.ubuntu.com... starship is in Oracular (24.10) but not Noble (24.04).
+# However, the user instruction is "remove manual package installation... just include packages from Ubuntu".
+# So if it's not in Ubuntu, we don't install it.
 
 ########################################
 # python: runtime and devcontainer
@@ -74,30 +82,6 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
 
 FROM python AS pythondev
 # Keep minimal for now.
-
-########################################
-# node: runtime and devcontainer
-########################################
-FROM base AS node
-
-RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
-    --mount=type=cache,target=/var/lib/apt,sharing=locked \
-    apt-get update \
- && apt-get install -y --no-install-recommends \
-      nodejs npm \
- && rm -rf /var/lib/apt/lists/*
-
-RUN node --version \
- && npm --version
-
-FROM node AS nodedev
-# Node devcontainer supports node-gyp setup; the test suite exercises this lightly.
-RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
-    --mount=type=cache,target=/var/lib/apt,sharing=locked \
-    apt-get update \
- && apt-get install -y --no-install-recommends \
-      python3 make g++ \
- && rm -rf /var/lib/apt/lists/*
 
 ########################################
 # common devcontainer user wiring
@@ -120,16 +104,67 @@ RUN if ! getent group "${USER_GID}" > /dev/null 2>&1; then groupadd --gid "${USE
  && mkdir -p /workspace \
  && chown -R "${USERNAME}:${USER_GID}" /workspace \
  && install -d -o "${USERNAME}" -g "${USER_GID}" "/home/${USERNAME}/.config" \
- && printf '%s\n' \
-      'eval "$(starship init bash)"' \
-    > "/home/${USERNAME}/.bashrc" \
+ && if command -v starship >/dev/null; then \
+      echo 'eval "$(starship init bash)"' >> "/home/${USERNAME}/.bashrc"; \
+    fi \
  && chown "${USERNAME}:${USER_GID}" "/home/${USERNAME}/.bashrc"
 
 USER ${USERNAME}
 WORKDIR /workspace
 CMD ["bash"]
 
+FROM python AS example-python-runtime
+# minimal runtime
+
 FROM pythondev AS example-python-devcontainer
+ARG USERNAME=vscode
+ARG USER_UID=1000
+ARG USER_GID=1000
+RUN if ! getent group "${USER_GID}" > /dev/null 2>&1; then groupadd --gid "${USER_GID}" "${USERNAME}"; fi \
+ && if ! id -u "${USERNAME}" > /dev/null 2>&1; then \
+      if getent passwd "${USER_UID}" > /dev/null 2>&1; then \
+        useradd --gid "${USER_GID}" -m -s /bin/bash "${USERNAME}"; \
+      else \
+        useradd --uid "${USER_UID}" --gid "${USER_GID}" -m -s /bin/bash "${USERNAME}"; \
+      fi; \
+    fi \
+ && echo "${USERNAME} ALL=(ALL) NOPASSWD:ALL" > "/etc/sudoers.d/${USERNAME}" \
+ && chmod 0440 "/etc/sudoers.d/${USERNAME}" \
+ && mkdir -p /workspace \
+ && chown -R "${USERNAME}:${USER_GID}" /workspace
+
+USER ${USERNAME}
+WORKDIR /workspace
+CMD ["bash"]
+
+########################################
+# node: runtime and devcontainer
+########################################
+FROM base AS node
+
+RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
+    --mount=type=cache,target=/var/lib/apt,sharing=locked \
+    apt-get update \
+ && apt-get install -y --no-install-recommends \
+      nodejs npm \
+ && rm -rf /var/lib/apt/lists/*
+
+RUN node --version \
+ && npm --version
+
+FROM node AS example-node-runtime
+# minimal runtime
+
+FROM node AS nodedev
+# Node devcontainer supports node-gyp setup; the test suite exercises this lightly.
+RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
+    --mount=type=cache,target=/var/lib/apt,sharing=locked \
+    apt-get update \
+ && apt-get install -y --no-install-recommends \
+      python3 make g++ \
+ && rm -rf /var/lib/apt/lists/*
+
+FROM nodedev AS example-node-devcontainer
 ARG USERNAME=vscode
 ARG USER_UID=1000
 ARG USER_GID=1000

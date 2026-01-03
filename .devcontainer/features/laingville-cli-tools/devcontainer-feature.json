@@ -1,0 +1,58 @@
+{
+  "id": "laingville-cli-tools",
+  "version": "1.0.0",
+  "name": "Laingville CLI Tools",
+  "description": "Modern CLI tools for development: jq, ripgrep, fd, bat, fzf, shellcheck, shfmt, just",
+  "documentationURL": "https://github.com/mrdavidlaing/laingville-devcontainer-ubuntu",
+  
+  "options": {
+    "installJq": {
+      "type": "boolean",
+      "default": true,
+      "description": "Install jq (JSON processor)"
+    },
+    "installRipgrep": {
+      "type": "boolean",
+      "default": true,
+      "description": "Install ripgrep (fast grep)"
+    },
+    "installFd": {
+      "type": "boolean",
+      "default": true,
+      "description": "Install fd (fast find)"
+    },
+    "installBat": {
+      "type": "boolean",
+      "default": true,
+      "description": "Install bat (cat with syntax highlighting)"
+    },
+    "installFzf": {
+      "type": "boolean",
+      "default": true,
+      "description": "Install fzf (fuzzy finder)"
+    },
+    "installShellcheck": {
+      "type": "boolean",
+      "default": true,
+      "description": "Install shellcheck (shell script linter)"
+    },
+    "installShfmt": {
+      "type": "boolean",
+      "default": true,
+      "description": "Install shfmt (shell script formatter)"
+    },
+    "installJust": {
+      "type": "boolean",
+      "default": true,
+      "description": "Install just (command runner)"
+    }
+  },
+
+  "containerEnv": {
+    "PATH": "/usr/local/bin:${PATH}"
+  },
+
+  "installsAfter": [
+    "ghcr.io/devcontainers/features/common-utils"
+  ]
+}

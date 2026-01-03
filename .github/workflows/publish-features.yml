@@ -1,0 +1,216 @@
+name: Publish Devcontainer Features
+
+on:
+  pull_request:
+    paths:
+      - '.devcontainer/features/**'
+  push:
+    branches: [main]
+    paths:
+      - '.devcontainer/features/**'
+  workflow_dispatch: {}
+
+env:
+  REGISTRY: ghcr.io
+  FEATURE_REPO: ghcr.io/mrdavidlaing/laingville-devcontainer-ubuntu/features
+
+jobs:
+  publish-features:
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+      packages: write
+      id-token: write
+
+    strategy:
+      matrix:
+        feature:
+          - laingville-cli-tools
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Generate tags
+        id: tags
+        run: |
+          DATE=$(date +%Y-%m-%d)
+          SHA=$(git rev-parse --short HEAD)
+          
+          FEATURE_DIR=".devcontainer/features/${{ matrix.feature }}"
+          VERSION=$(jq -r '.version' "${FEATURE_DIR}/devcontainer-feature.json")
+          
+          echo "date=${DATE}" >> "$GITHUB_OUTPUT"
+          echo "sha=${SHA}" >> "$GITHUB_OUTPUT"
+          echo "version=${VERSION}" >> "$GITHUB_OUTPUT"
+
+      - name: Validate feature
+        run: |
+          FEATURE_DIR=".devcontainer/features/${{ matrix.feature }}"
+          
+          echo "=== Validating ${{ matrix.feature }} ==="
+          
+          if [ ! -f "${FEATURE_DIR}/devcontainer-feature.json" ]; then
+            echo "ERROR: Missing devcontainer-feature.json"
+            exit 1
+          fi
+          
+          if [ ! -f "${FEATURE_DIR}/install.sh" ]; then
+            echo "ERROR: Missing install.sh"
+            exit 1
+          fi
+          
+          python3 -c "import json; json.load(open('${FEATURE_DIR}/devcontainer-feature.json'))"
+          echo "✓ devcontainer-feature.json is valid JSON"
+          
+          bash -n "${FEATURE_DIR}/install.sh"
+          echo "✓ install.sh has valid bash syntax"
+          
+          shellcheck "${FEATURE_DIR}/install.sh" || echo "⚠ shellcheck warnings (non-blocking)"
+          
+          echo "✓ Feature validation passed"
+
+      - name: Package feature
+        id: package
+        run: |
+          FEATURE_DIR=".devcontainer/features/${{ matrix.feature }}"
+          OUTPUT_DIR="./output"
+          mkdir -p "${OUTPUT_DIR}"
+          
+          tar -czf "${OUTPUT_DIR}/${{ matrix.feature }}.tgz" \
+            -C "${FEATURE_DIR}" \
+            .
+          
+          echo "artifact=${OUTPUT_DIR}/${{ matrix.feature }}.tgz" >> "$GITHUB_OUTPUT"
+          
+          echo "=== Package contents ==="
+          tar -tzf "${OUTPUT_DIR}/${{ matrix.feature }}.tgz"
+
+      - name: Log in to GHCR
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Install ORAS
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: oras-project/setup-oras@v1
+
+      - name: Publish feature to GHCR
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: |
+          FEATURE_BASE="${{ env.FEATURE_REPO }}/${{ matrix.feature }}"
+          VERSION="${{ steps.tags.outputs.version }}"
+          DATE="${{ steps.tags.outputs.date }}"
+          SHA="${{ steps.tags.outputs.sha }}"
+          ARTIFACT="${{ steps.package.outputs.artifact }}"
+          
+          echo "=== Publishing ${{ matrix.feature }} ==="
+          echo "Version: ${VERSION}"
+          echo "Date: ${DATE}"
+          echo "SHA: ${SHA}"
+          
+          TAGS=(
+            "${FEATURE_BASE}:${VERSION}"
+            "${FEATURE_BASE}:${DATE}"
+            "${FEATURE_BASE}:${DATE}-${SHA}"
+            "${FEATURE_BASE}:latest"
+          )
+          
+          for TAG in "${TAGS[@]}"; do
+            echo "Publishing: ${TAG}"
+            oras push "${TAG}" \
+              --config /dev/null:application/vnd.devcontainers \
+              "${ARTIFACT}:application/vnd.devcontainers.layer.v1+tar"
+          done
+          
+          echo "✓ Feature published successfully"
+
+      - name: Install Cosign
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: sigstore/cosign-installer@v3
+
+      - name: Sign feature
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: |
+          FEATURE_BASE="${{ env.FEATURE_REPO }}/${{ matrix.feature }}"
+          VERSION="${{ steps.tags.outputs.version }}"
+          
+          echo "=== Signing feature ==="
+          cosign sign --yes "${FEATURE_BASE}:${VERSION}"
+          cosign sign --yes "${FEATURE_BASE}:latest"
+          
+          echo "✓ Feature signed successfully"
+        env:
+          COSIGN_EXPERIMENTAL: "true"
+
+      - name: Install Syft
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: anchore/sbom-action/download-syft@v0
+
+      - name: Generate and attach SBOM
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: |
+          FEATURE_DIR=".devcontainer/features/${{ matrix.feature }}"
+          FEATURE_BASE="${{ env.FEATURE_REPO }}/${{ matrix.feature }}"
+          VERSION="${{ steps.tags.outputs.version }}"
+          
+          echo "=== Generating SBOM ==="
+          syft dir:"${FEATURE_DIR}" -o spdx-json > sbom.spdx.json
+          
+          echo "=== Attaching SBOM as attestation ==="
+          cosign attest --yes \
+            --predicate sbom.spdx.json \
+            --type spdx \
+            "${FEATURE_BASE}:${VERSION}"
+          
+          echo "✓ SBOM generated and attached"
+        env:
+          COSIGN_EXPERIMENTAL: "true"
+
+      - name: Upload SBOM artifact
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: actions/upload-artifact@v4
+        with:
+          name: sbom-${{ matrix.feature }}
+          path: sbom.spdx.json
+
+      - name: Summary
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: |
+          FEATURE_BASE="${{ env.FEATURE_REPO }}/${{ matrix.feature }}"
+          VERSION="${{ steps.tags.outputs.version }}"
+          DATE="${{ steps.tags.outputs.date }}"
+          SHA="${{ steps.tags.outputs.sha }}"
+          
+          cat >> "$GITHUB_STEP_SUMMARY" << EOF
+          ## Published Feature: ${{ matrix.feature }}
+          
+          | Tag | Image |
+          |-----|-------|
+          | Version | \`${FEATURE_BASE}:${VERSION}\` |
+          | Date | \`${FEATURE_BASE}:${DATE}\` |
+          | SHA | \`${FEATURE_BASE}:${DATE}-${SHA}\` |
+          | Latest | \`${FEATURE_BASE}:latest\` |
+          
+          ### Usage
+          
+          \`\`\`jsonc
+          {
+            "features": {
+              "${FEATURE_BASE}:${VERSION}": {}
+            }
+          }
+          \`\`\`
+          
+          ### Verification
+          
+          \`\`\`bash
+          # Verify signature
+          cosign verify ${FEATURE_BASE}:${VERSION}
+          
+          # View SBOM attestation
+          cosign verify-attestation --type spdx ${FEATURE_BASE}:${VERSION}
+          \`\`\`
+          EOF

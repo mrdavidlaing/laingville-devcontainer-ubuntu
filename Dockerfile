@@ -5,12 +5,12 @@
 # Notes:
 # - We intentionally do NOT include Nix.
 # - We rely STRICTLY on upstream Ubuntu packages to improve security posture and reduce SBOM complexity.
-# - Versions are those provided by Ubuntu 24.04 (Noble).
+# - Versions are those provided by Ubuntu 25.10 (Questing Quokka).
 #
 # If you want stronger reproducibility, set UBUNTU_IMAGE to a pinned digest.
 # Ideally use a multi-arch manifest-list digest.
 
-ARG UBUNTU_IMAGE=ubuntu:24.04
+ARG UBUNTU_IMAGE=ubuntu:25.10
 
 ############################
 # base: shared OS + common tools
@@ -49,7 +49,7 @@ RUN ln -sf /usr/bin/batcat /usr/local/bin/bat || true \
 ########################################
 FROM base AS bashdev
 
-# Note: shellspec is not in Ubuntu 24.04 repos.
+# Note: shellspec is not in Ubuntu 25.10 repos.
 # We are intentionally dropping manual installs for security.
 RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
     --mount=type=cache,target=/var/lib/apt,sharing=locked \
@@ -59,15 +59,6 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
       just \
       shfmt \
  && rm -rf /var/lib/apt/lists/*
-
-# Starship is in Ubuntu 24.04 universe, but sometimes older.
-# Checking if 'starship' package exists or needs snap. 
-# It is not in standard main/universe for 24.04 yet (checked elsewhere), 
-# actually it IS in universe for 24.10, but maybe not 24.04.
-# Let's try installing it, if it fails, we omit it as per instruction "just include packages from Ubuntu".
-# Wait, checking packages.ubuntu.com... starship is in Oracular (24.10) but not Noble (24.04).
-# However, the user instruction is "remove manual package installation... just include packages from Ubuntu".
-# So if it's not in Ubuntu, we don't install it.
 
 ########################################
 # python: runtime and devcontainer

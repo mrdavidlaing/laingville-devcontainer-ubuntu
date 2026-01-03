@@ -29,4 +29,4 @@ docker run --rm -it laingville-devcontainer:local bash
 ## Design notes
 
 - **No Nix inside containers**: intentionally Ubuntu-native.
-- **Node invariant parity**: uses the same Node environment test as Laingville (`Node 22.x`, `npm 11.x`, `glob` not vulnerable).
+- **Node environment**: Ubuntu 25.10 provides `Node 20.x` and `npm 9.2.0` from upstream packages. Version compatibility tested; plan upgrade to Ubuntu 26.04 LTS (April 2026) for Node 22.x.

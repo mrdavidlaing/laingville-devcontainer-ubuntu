@@ -3,14 +3,14 @@
   "dataLicense": "CC0-1.0",
   "SPDXID": "SPDXRef-DOCUMENT",
   "name": ".devcontainer/features/laingville-cli-tools",
-  "documentNamespace": "https://anchore.com/syft/dir/.devcontainer/features/laingville-cli-tools-cf067108-4efc-4bfc-8703-80eb72bea64c",
+  "documentNamespace": "https://anchore.com/syft/dir/.devcontainer/features/laingville-cli-tools-2104f4e8-e68b-48ab-9a86-ce75c0e3cfa3",
   "creationInfo": {
     "licenseListVersion": "3.27",
     "creators": [
       "Organization: Anchore, Inc",
       "Tool: syft-1.39.0"
     ],
-    "created": "2026-01-04T12:00:36Z"
+    "created": "2026-01-04T12:10:03Z"
   },
   "packages": [
     {
@@ -81,8 +81,8 @@
       "downloadLocation": "NOASSERTION",
       "filesAnalyzed": false,
       "sourceInfo": "acquired package info from go module information: /bin/fzf",
-      "licenseConcluded": "NOASSERTION",
-      "licenseDeclared": "NOASSERTION",
+      "licenseConcluded": "MIT",
+      "licenseDeclared": "MIT",
       "copyrightText": "NOASSERTION",
       "externalRefs": [
         {
@@ -95,7 +95,8 @@
           "referenceType": "purl",
           "referenceLocator": "pkg:golang/github.com/junegunn/fzf@v0.0.0-20241115010601-add1aec685ff"
         }
-      ]
+      ],
+      "comment": "License source: https://github.com/junegunn/fzf/blob/v0.56.3/LICENSE"
     },
     {
       "name": "github.com/junegunn/go-shellwords",
@@ -360,8 +361,8 @@
       "downloadLocation": "NOASSERTION",
       "filesAnalyzed": false,
       "sourceInfo": "acquired package info from the following paths: /bin/jq",
-      "licenseConcluded": "NOASSERTION",
-      "licenseDeclared": "NOASSERTION",
+      "licenseConcluded": "MIT",
+      "licenseDeclared": "MIT",
       "copyrightText": "NOASSERTION",
       "externalRefs": [
         {
@@ -374,7 +375,8 @@
           "referenceType": "purl",
           "referenceLocator": "pkg:generic/jq@1.7.1"
         }
-      ]
+      ],
+      "comment": "License source: https://github.com/jqlang/jq/blob/jq-1.7.1/COPYING"
     },
     {
       "name": "mvdan.cc/editorconfig",
@@ -409,8 +411,8 @@
       "downloadLocation": "NOASSERTION",
       "filesAnalyzed": false,
       "sourceInfo": "acquired package info from go module information: /bin/shfmt",
-      "licenseConcluded": "NOASSERTION",
-      "licenseDeclared": "NOASSERTION",
+      "licenseConcluded": "BSD-3-Clause",
+      "licenseDeclared": "BSD-3-Clause",
       "copyrightText": "NOASSERTION",
       "externalRefs": [
         {
@@ -423,7 +425,8 @@
           "referenceType": "purl",
           "referenceLocator": "pkg:golang/mvdan.cc/sh/v3@v0.0.0-20241020204033-392da98b0385"
         }
-      ]
+      ],
+      "comment": "License source: https://github.com/mvdan/sh/blob/v3.10.0/LICENSE"
     },
     {
       "name": "stdlib",

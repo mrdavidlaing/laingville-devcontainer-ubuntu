@@ -78,7 +78,8 @@ jobs:
           SHA="${{ steps.tags.outputs.sha }}"
           ARTIFACT="${{ steps.package.outputs.artifact }}"
           
-          for TAG in "${VERSION}" "${DATE}" "${DATE}-${SHA}" "latest"; do
+          MAJOR_VERSION="${VERSION%%.*}"
+          for TAG in "${VERSION}" "${MAJOR_VERSION}" "${DATE}" "${DATE}-${SHA}" "latest"; do
             echo "Publishing: ${FEATURE_BASE}:${TAG}"
             oras push "${FEATURE_BASE}:${TAG}" \
               --config /dev/null:application/vnd.devcontainers \

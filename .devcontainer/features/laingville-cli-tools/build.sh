@@ -66,6 +66,70 @@ download_binaries() {
 	echo ""
 	echo "=== Downloaded binaries ==="
 	ls -la "${bin_dir}"
+
+	# Download licenses after binaries
+	download_licenses
+}
+
+download_licenses() {
+	local license_dir="${SCRIPT_DIR}/licenses"
+	mkdir -p "${license_dir}"
+
+	echo ""
+	echo "=== Downloading LICENSE files ==="
+
+	# jq - MIT (file is named COPYING)
+	echo "Downloading jq license..."
+	curl -fsSL "https://raw.githubusercontent.com/jqlang/jq/jq-1.7.1/COPYING" \
+		-o "${license_dir}/jq.LICENSE"
+
+	# ripgrep - MIT/Unlicense (we use MIT)
+	echo "Downloading ripgrep license..."
+	curl -fsSL "https://raw.githubusercontent.com/BurntSushi/ripgrep/14.1.1/LICENSE-MIT" \
+		-o "${license_dir}/ripgrep.LICENSE"
+
+	# fd - MIT/Apache-2.0 (we use MIT)
+	echo "Downloading fd license..."
+	curl -fsSL "https://raw.githubusercontent.com/sharkdp/fd/v10.2.0/LICENSE-MIT" \
+		-o "${license_dir}/fd.LICENSE"
+
+	# bat - MIT/Apache-2.0 (we use MIT)
+	echo "Downloading bat license..."
+	curl -fsSL "https://raw.githubusercontent.com/sharkdp/bat/v0.24.0/LICENSE-MIT" \
+		-o "${license_dir}/bat.LICENSE"
+
+	# fzf - MIT
+	echo "Downloading fzf license..."
+	curl -fsSL "https://raw.githubusercontent.com/junegunn/fzf/v0.56.3/LICENSE" \
+		-o "${license_dir}/fzf.LICENSE"
+
+	# GPL-3.0 license for shellcheck
+	echo "Downloading shellcheck license..."
+	curl -fsSL "https://raw.githubusercontent.com/koalaman/shellcheck/v0.10.0/LICENSE" \
+		-o "${license_dir}/shellcheck.LICENSE"
+
+	# shfmt - BSD-3-Clause
+	echo "Downloading shfmt license..."
+	curl -fsSL "https://raw.githubusercontent.com/mvdan/sh/v3.10.0/LICENSE" \
+		-o "${license_dir}/shfmt.LICENSE"
+
+	# just - CC0-1.0
+	echo "Downloading just license..."
+	curl -fsSL "https://raw.githubusercontent.com/casey/just/1.36.0/LICENSE" \
+		-o "${license_dir}/just.LICENSE"
+
+	# Create shellcheck GPL source code offer
+	create_shellcheck_source_offer
+
+	echo ""
+	echo "=== Downloaded licenses ==="
+	ls -la "${license_dir}"
+}
+
+create_shellcheck_source_offer() {
+	local license_dir="${SCRIPT_DIR}/licenses"
+	cp "${SCRIPT_DIR}/shellcheck.SOURCE_OFFER.template" "${license_dir}/shellcheck.SOURCE_OFFER"
+	echo "Created shellcheck GPL source offer"
 }
 
 validate_feature() {
@@ -155,9 +219,10 @@ test_binaries() {
 
 clean() {
 	echo "=== Cleaning ==="
-	rm -rf "${SCRIPT_DIR}/bin"
-	rm -rf "${SCRIPT_DIR}/output"
-	echo "✓ Cleaned bin/ and output/"
+	rm -rf "${SCRIPT_DIR:?}/bin"
+	rm -rf "${SCRIPT_DIR:?}/output"
+	rm -rf "${SCRIPT_DIR:?}/licenses"
+	echo "✓ Cleaned bin/, output/, and licenses/"
 }
 
 case "${1:-}" in

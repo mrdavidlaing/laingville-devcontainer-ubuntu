@@ -33,6 +33,26 @@ for bin in jq rg fd bat fzf shellcheck shfmt just; do
 	fi
 done
 
+LICENSE_SOURCE="${SCRIPT_DIR}/licenses"
+LICENSE_DEST="/usr/local/share/licenses/laingville-cli-tools"
+
+if [ -d "${LICENSE_SOURCE}" ]; then
+	echo ""
+	echo "Installing licenses to ${LICENSE_DEST}..."
+	mkdir -p "${LICENSE_DEST}"
+	cp "${LICENSE_SOURCE}"/*.LICENSE "${LICENSE_DEST}/" 2>/dev/null || true
+	cp "${LICENSE_SOURCE}"/*.SOURCE_OFFER "${LICENSE_DEST}/" 2>/dev/null || true
+
+	if [ -f "${SCRIPT_DIR}/THIRD_PARTY_NOTICES.md" ]; then
+		cp "${SCRIPT_DIR}/THIRD_PARTY_NOTICES.md" "${LICENSE_DEST}/"
+	fi
+
+	echo "  ✓ Licenses installed"
+	ls "${LICENSE_DEST}/"
+else
+	echo "WARNING: License directory not found, skipping license installation"
+fi
+
 echo ""
 echo "=== Installed versions ==="
 jq --version

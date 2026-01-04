@@ -1,0 +1,42 @@
+================================================================================
+GPL-3.0 SOURCE CODE OFFER FOR SHELLCHECK
+================================================================================
+
+This distribution includes shellcheck version 0.10.0, which is licensed under
+the GNU General Public License version 3 (GPL-3.0).
+
+OBTAINING SOURCE CODE
+---------------------
+
+The complete corresponding source code for shellcheck is available from:
+
+  Repository:     https://github.com/koalaman/shellcheck
+  Release Tag:    v0.10.0
+  Source Archive: https://github.com/koalaman/shellcheck/archive/refs/tags/v0.10.0.tar.gz
+
+To download the source code:
+
+  curl -L https://github.com/koalaman/shellcheck/archive/refs/tags/v0.10.0.tar.gz \
+       -o shellcheck-v0.10.0-source.tar.gz
+
+WRITTEN OFFER
+-------------
+
+In accordance with Section 6(b) of the GPL-3.0, we hereby offer to provide
+the complete corresponding source code for shellcheck to any third party,
+upon request, for a period of three (3) years from the date of this
+distribution (January 2026 - January 2029).
+
+To request source code on physical medium, contact:
+  https://github.com/mrdavidlaing/laingville-devcontainer-ubuntu/issues
+
+This offer is valid for three years and applies to anyone who possesses
+a copy of this distribution.
+
+================================================================================
+Binary obtained from:
+https://github.com/koalaman/shellcheck/releases/download/v0.10.0/shellcheck-v0.10.0.linux.x86_64.tar.xz
+
+Distribution date: 2026-01-04
+Feature version: 1.0.0
+================================================================================

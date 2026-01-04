@@ -13,16 +13,7 @@
       "installTools": false
     },
     "ghcr.io/devcontainers/features/github-cli:1": {},
-    "./features/laingville-cli-tools": {
-      "installJq": true,
-      "installRipgrep": true,
-      "installFd": true,
-      "installBat": true,
-      "installFzf": true,
-      "installShellcheck": true,
-      "installShfmt": true,
-      "installJust": true
-    }
+    "ghcr.io/mrdavidlaing/laingville-devcontainer-ubuntu/features/laingville-cli-tools:1": {}
   },
 
   "remoteUser": "vscode",

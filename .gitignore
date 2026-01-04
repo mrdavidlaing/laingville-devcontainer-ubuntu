@@ -3,6 +3,10 @@
 *.spdx.json
 *.cyclonedx.json
 
+# feature build artifacts
+.devcontainer/features/*/bin/
+.devcontainer/features/*/output/
+
 # editor
 .DS_Store
 .idea/

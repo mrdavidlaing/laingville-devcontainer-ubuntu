@@ -33,57 +33,29 @@ jobs:
       - name: Generate tags
         id: tags
         run: |
+          FEATURE_DIR=".devcontainer/features/${{ matrix.feature }}"
+          VERSION=$(jq -r '.version' "${FEATURE_DIR}/devcontainer-feature.json")
           DATE=$(date +%Y-%m-%d)
           SHA=$(git rev-parse --short HEAD)
           
-          FEATURE_DIR=".devcontainer/features/${{ matrix.feature }}"
-          VERSION=$(jq -r '.version' "${FEATURE_DIR}/devcontainer-feature.json")
-          
+          echo "version=${VERSION}" >> "$GITHUB_OUTPUT"
           echo "date=${DATE}" >> "$GITHUB_OUTPUT"
           echo "sha=${SHA}" >> "$GITHUB_OUTPUT"
-          echo "version=${VERSION}" >> "$GITHUB_OUTPUT"
 
       - name: Validate feature
-        run: |
-          FEATURE_DIR=".devcontainer/features/${{ matrix.feature }}"
-          
-          echo "=== Validating ${{ matrix.feature }} ==="
-          
-          if [ ! -f "${FEATURE_DIR}/devcontainer-feature.json" ]; then
-            echo "ERROR: Missing devcontainer-feature.json"
-            exit 1
-          fi
-          
-          if [ ! -f "${FEATURE_DIR}/install.sh" ]; then
-            echo "ERROR: Missing install.sh"
-            exit 1
-          fi
-          
-          python3 -c "import json; json.load(open('${FEATURE_DIR}/devcontainer-feature.json'))"
-          echo "✓ devcontainer-feature.json is valid JSON"
-          
-          bash -n "${FEATURE_DIR}/install.sh"
-          echo "✓ install.sh has valid bash syntax"
-          
-          shellcheck "${FEATURE_DIR}/install.sh" || echo "⚠ shellcheck warnings (non-blocking)"
-          
-          echo "✓ Feature validation passed"
+        run: .devcontainer/features/${{ matrix.feature }}/build.sh validate
+
+      - name: Download binaries
+        run: .devcontainer/features/${{ matrix.feature }}/build.sh download
+
+      - name: Test binaries
+        run: .devcontainer/features/${{ matrix.feature }}/build.sh test
 
       - name: Package feature
         id: package
         run: |
-          FEATURE_DIR=".devcontainer/features/${{ matrix.feature }}"
-          OUTPUT_DIR="./output"
-          mkdir -p "${OUTPUT_DIR}"
-          
-          tar -czf "${OUTPUT_DIR}/${{ matrix.feature }}.tgz" \
-            -C "${FEATURE_DIR}" \
-            .
-          
-          echo "artifact=${OUTPUT_DIR}/${{ matrix.feature }}.tgz" >> "$GITHUB_OUTPUT"
-          
-          echo "=== Package contents ==="
-          tar -tzf "${OUTPUT_DIR}/${{ matrix.feature }}.tgz"
+          .devcontainer/features/${{ matrix.feature }}/build.sh package
+          echo "artifact=.devcontainer/features/${{ matrix.feature }}/output/${{ matrix.feature }}.tgz" >> "$GITHUB_OUTPUT"
 
       - name: Log in to GHCR
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
@@ -106,26 +78,14 @@ jobs:
           SHA="${{ steps.tags.outputs.sha }}"
           ARTIFACT="${{ steps.package.outputs.artifact }}"
           
-          echo "=== Publishing ${{ matrix.feature }} ==="
-          echo "Version: ${VERSION}"
-          echo "Date: ${DATE}"
-          echo "SHA: ${SHA}"
-          
-          TAGS=(
-            "${FEATURE_BASE}:${VERSION}"
-            "${FEATURE_BASE}:${DATE}"
-            "${FEATURE_BASE}:${DATE}-${SHA}"
-            "${FEATURE_BASE}:latest"
-          )
-          
-          for TAG in "${TAGS[@]}"; do
-            echo "Publishing: ${TAG}"
-            oras push "${TAG}" \
+          for TAG in "${VERSION}" "${DATE}" "${DATE}-${SHA}" "latest"; do
+            echo "Publishing: ${FEATURE_BASE}:${TAG}"
+            oras push "${FEATURE_BASE}:${TAG}" \
               --config /dev/null:application/vnd.devcontainers \
               "${ARTIFACT}:application/vnd.devcontainers.layer.v1+tar"
           done
           
-          echo "✓ Feature published successfully"
+          echo "✓ Feature published"
 
       - name: Install Cosign
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
@@ -133,17 +93,15 @@ jobs:
 
       - name: Sign feature
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        env:
+          COSIGN_EXPERIMENTAL: "true"
         run: |
           FEATURE_BASE="${{ env.FEATURE_REPO }}/${{ matrix.feature }}"
           VERSION="${{ steps.tags.outputs.version }}"
           
-          echo "=== Signing feature ==="
           cosign sign --yes "${FEATURE_BASE}:${VERSION}"
           cosign sign --yes "${FEATURE_BASE}:latest"
-          
-          echo "✓ Feature signed successfully"
-        env:
-          COSIGN_EXPERIMENTAL: "true"
+          echo "✓ Feature signed"
 
       - name: Install Syft
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
@@ -151,23 +109,16 @@ jobs:
 
       - name: Generate and attach SBOM
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        env:
+          COSIGN_EXPERIMENTAL: "true"
         run: |
           FEATURE_DIR=".devcontainer/features/${{ matrix.feature }}"
           FEATURE_BASE="${{ env.FEATURE_REPO }}/${{ matrix.feature }}"
           VERSION="${{ steps.tags.outputs.version }}"
           
-          echo "=== Generating SBOM ==="
           syft dir:"${FEATURE_DIR}" -o spdx-json > sbom.spdx.json
-          
-          echo "=== Attaching SBOM as attestation ==="
-          cosign attest --yes \
-            --predicate sbom.spdx.json \
-            --type spdx \
-            "${FEATURE_BASE}:${VERSION}"
-          
-          echo "✓ SBOM generated and attached"
-        env:
-          COSIGN_EXPERIMENTAL: "true"
+          cosign attest --yes --predicate sbom.spdx.json --type spdx "${FEATURE_BASE}:${VERSION}"
+          echo "✓ SBOM attached"
 
       - name: Upload SBOM artifact
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
@@ -181,36 +132,94 @@ jobs:
         run: |
           FEATURE_BASE="${{ env.FEATURE_REPO }}/${{ matrix.feature }}"
           VERSION="${{ steps.tags.outputs.version }}"
-          DATE="${{ steps.tags.outputs.date }}"
-          SHA="${{ steps.tags.outputs.sha }}"
           
           cat >> "$GITHUB_STEP_SUMMARY" << EOF
-          ## Published Feature: ${{ matrix.feature }}
+          ## Published: ${{ matrix.feature }}
           
-          | Tag | Image |
-          |-----|-------|
-          | Version | \`${FEATURE_BASE}:${VERSION}\` |
-          | Date | \`${FEATURE_BASE}:${DATE}\` |
-          | SHA | \`${FEATURE_BASE}:${DATE}-${SHA}\` |
-          | Latest | \`${FEATURE_BASE}:latest\` |
-          
-          ### Usage
-          
-          \`\`\`jsonc
+          \`\`\`json
+          { "features": { "${FEATURE_BASE}:${VERSION}": {} } }
+          \`\`\`
+          EOF
+
+  test-published-feature:
+    needs: publish-features
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+      packages: read
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install devcontainer CLI
+        run: npm install -g @devcontainers/cli
+
+      - name: Create test config
+        run: |
+          mkdir -p .devcontainer-test
+          cat > .devcontainer-test/devcontainer.json << 'EOF'
           {
+            "name": "Feature Test",
+            "image": "mcr.microsoft.com/devcontainers/base:1-ubuntu-24.04",
             "features": {
-              "${FEATURE_BASE}:${VERSION}": {}
+              "ghcr.io/mrdavidlaing/laingville-devcontainer-ubuntu/features/laingville-cli-tools:latest": {}
             }
           }
-          \`\`\`
+          EOF
+
+      - name: Build devcontainer
+        run: devcontainer build --workspace-folder . --config .devcontainer-test/devcontainer.json
+
+      - name: Test tools
+        run: |
+          devcontainer exec --workspace-folder . --config .devcontainer-test/devcontainer.json \
+            bash -c 'set -e; for t in jq rg fd bat fzf shellcheck shfmt just; do echo -n "$t: "; $t --version | head -1; done; echo "✓ All tools working"'
+
+      - name: Install Cosign
+        uses: sigstore/cosign-installer@v3
+
+      - name: Verify signature
+        run: |
+          echo "=== Verifying signature ==="
+          cosign verify \
+            --certificate-identity-regexp="https://github.com/mrdavidlaing/laingville-devcontainer-ubuntu/.*" \
+            --certificate-oidc-issuer="https://token.actions.githubusercontent.com" \
+            ghcr.io/mrdavidlaing/laingville-devcontainer-ubuntu/features/laingville-cli-tools:latest
+          echo "✓ Signature verified"
+
+      - name: Verify and print SBOM attestation
+        run: |
+          echo "=== Verifying SBOM attestation ==="
+          cosign verify-attestation \
+            --type spdx \
+            --certificate-identity-regexp="https://github.com/mrdavidlaing/laingville-devcontainer-ubuntu/.*" \
+            --certificate-oidc-issuer="https://token.actions.githubusercontent.com" \
+            ghcr.io/mrdavidlaing/laingville-devcontainer-ubuntu/features/laingville-cli-tools:latest \
+            | jq -r '.payload' | base64 -d | jq '.predicate' > sbom.json
+          echo "✓ SBOM attestation verified"
           
-          ### Verification
+          echo ""
+          echo "=== SBOM Contents ==="
+          jq '.' sbom.json
           
-          \`\`\`bash
-          # Verify signature
-          cosign verify ${FEATURE_BASE}:${VERSION}
+          echo ""
+          echo "=== SBOM Package Summary ==="
+          jq -r '.packages[]? | "\(.name) \(.versionInfo // "n/a")"' sbom.json || echo "(no packages listed)"
+
+      - name: Test summary
+        run: |
+          cat >> "$GITHUB_STEP_SUMMARY" << 'EOF'
+          ## Feature Test: ✓ Passed
           
-          # View SBOM attestation
-          cosign verify-attestation --type spdx ${FEATURE_BASE}:${VERSION}
-          \`\`\`
+          **Tools verified:** jq, rg, fd, bat, fzf, shellcheck, shfmt, just
+          
+          **Supply chain:**
+          - ✓ Signature verified (Sigstore/Cosign)
+          - ✓ SBOM attestation verified (SPDX format)
           EOF

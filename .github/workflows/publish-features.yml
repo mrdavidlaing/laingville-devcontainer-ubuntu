@@ -212,16 +212,12 @@ jobs:
             --certificate-identity-regexp="https://github.com/mrdavidlaing/laingville-devcontainer-ubuntu/.*" \
             --certificate-oidc-issuer="https://token.actions.githubusercontent.com" \
             ghcr.io/mrdavidlaing/laingville-devcontainer-ubuntu/features/laingville-cli-tools:latest \
-            | tee attestation.json | jq -r '.payload' | base64 -d | jq '.predicate' > sbom.json
+            | jq -r '.payload' | base64 -d | jq '.predicate' > sbom.json
           echo "✓ SBOM attestation verified"
           
           echo ""
-          echo "=== SBOM Contents ==="
-          jq '.' sbom.json
-          
-          echo ""
           echo "=== SBOM Package Summary ==="
-          jq -r '.packages[]? | "\(.name) \(.versionInfo // "n/a")"' sbom.json || echo "(no packages listed)"
+          jq -r 'if type == "string" then fromjson else . end | .packages[]? | "\(.name) \(.versionInfo // "n/a")"' sbom.json | head -20 || echo "(no packages listed)"
 
       - name: Test summary
         run: |

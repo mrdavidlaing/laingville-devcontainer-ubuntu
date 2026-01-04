@@ -173,13 +173,22 @@ jobs:
           }
           EOF
 
-      - name: Build devcontainer
-        run: devcontainer build --workspace-folder . --config .devcontainer-test/devcontainer.json
+      - name: Start devcontainer
+        run: devcontainer up --workspace-folder . --config .devcontainer-test/devcontainer.json
 
       - name: Test tools
         run: |
           devcontainer exec --workspace-folder . --config .devcontainer-test/devcontainer.json \
             bash -c 'set -e; for t in jq rg fd bat fzf shellcheck shfmt just; do echo -n "$t: "; $t --version | head -1; done; echo "✓ All tools working"'
+
+      - name: Stop devcontainer
+        if: always()
+        run: |
+          CONTAINER_ID=$(docker ps -q --filter "label=devcontainer.local_folder=$PWD")
+          if [ -n "$CONTAINER_ID" ]; then
+            docker stop "$CONTAINER_ID" || true
+            docker rm "$CONTAINER_ID" || true
+          fi
 
       - name: Install Cosign
         uses: sigstore/cosign-installer@v3

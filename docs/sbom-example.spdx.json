@@ -1,0 +1,882 @@
+{
+  "spdxVersion": "SPDX-2.3",
+  "dataLicense": "CC0-1.0",
+  "SPDXID": "SPDXRef-DOCUMENT",
+  "name": ".devcontainer/features/laingville-cli-tools",
+  "documentNamespace": "https://anchore.com/syft/dir/.devcontainer/features/laingville-cli-tools-f0740478-16fb-476b-861d-0693d3e3c92f",
+  "creationInfo": {
+    "licenseListVersion": "3.27",
+    "creators": [
+      "Organization: Anchore, Inc",
+      "Tool: syft-1.39.0"
+    ],
+    "created": "2026-01-04T11:51:47Z"
+  },
+  "packages": [
+    {
+      "name": "github.com/charlievieth/fastwalk",
+      "SPDXID": "SPDXRef-Package-go-module-github.com-charlievieth-fastwalk-b2b10b92cbe861a9",
+      "versionInfo": "v1.0.9",
+      "supplier": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "39d6fdd807e845e3b7a0505f0c64f927e9f083340f17f816030e84ebf964a2bd"
+        }
+      ],
+      "sourceInfo": "acquired package info from go module information: /bin/fzf",
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "copyrightText": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "SECURITY",
+          "referenceType": "cpe23Type",
+          "referenceLocator": "cpe:2.3:a:charlievieth:fastwalk:v1.0.9:*:*:*:*:*:*:*"
+        },
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:golang/github.com/charlievieth/fastwalk@v1.0.9"
+        }
+      ]
+    },
+    {
+      "name": "github.com/google/renameio/v2",
+      "SPDXID": "SPDXRef-Package-go-module-github.com-google-renameio-v2-40bb643e659ee4ab",
+      "versionInfo": "v2.0.0",
+      "supplier": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "5227c8db7653198f13b76f496d8162bb2214dde5fe44d16d53079fabda808718"
+        }
+      ],
+      "sourceInfo": "acquired package info from go module information: /bin/shfmt",
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "copyrightText": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "SECURITY",
+          "referenceType": "cpe23Type",
+          "referenceLocator": "cpe:2.3:a:google:renameio\\/v2:v2.0.0:*:*:*:*:*:*:*"
+        },
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:golang/github.com/google/renameio/v2@v2.0.0"
+        }
+      ]
+    },
+    {
+      "name": "github.com/junegunn/fzf",
+      "SPDXID": "SPDXRef-Package-go-module-github.com-junegunn-fzf-94c3d35f05269dfa",
+      "versionInfo": "v0.0.0-20241115010601-add1aec685ff",
+      "supplier": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "sourceInfo": "acquired package info from go module information: /bin/fzf",
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "copyrightText": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "SECURITY",
+          "referenceType": "cpe23Type",
+          "referenceLocator": "cpe:2.3:a:junegunn:fzf:v0.0.0-20241115010601-add1aec685ff:*:*:*:*:*:*:*"
+        },
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:golang/github.com/junegunn/fzf@v0.0.0-20241115010601-add1aec685ff"
+        }
+      ]
+    },
+    {
+      "name": "github.com/junegunn/go-shellwords",
+      "SPDXID": "SPDXRef-Package-go-module-github.com-junegunn-go-shellwords-4458eefe2836b971",
+      "versionInfo": "v0.0.0-20240813092932-a62c48c52e97",
+      "supplier": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "aeaccb8b1568d5cfc6416ea9c7d8f5c509a5bd0227fa57ff57a335510ec8173c"
+        }
+      ],
+      "sourceInfo": "acquired package info from go module information: /bin/fzf",
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "copyrightText": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "SECURITY",
+          "referenceType": "cpe23Type",
+          "referenceLocator": "cpe:2.3:a:junegunn:go-shellwords:v0.0.0-20240813092932-a62c48c52e97:*:*:*:*:*:*:*"
+        },
+        {
+          "referenceCategory": "SECURITY",
+          "referenceType": "cpe23Type",
+          "referenceLocator": "cpe:2.3:a:junegunn:go_shellwords:v0.0.0-20240813092932-a62c48c52e97:*:*:*:*:*:*:*"
+        },
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:golang/github.com/junegunn/go-shellwords@v0.0.0-20240813092932-a62c48c52e97"
+        }
+      ]
+    },
+    {
+      "name": "github.com/mattn/go-isatty",
+      "SPDXID": "SPDXRef-Package-go-module-github.com-mattn-go-isatty-10c2c13eaf183101",
+      "versionInfo": "v0.0.20",
+      "supplier": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "c5f0f4883b842a70e4974deae258a607ebc7f86c4b12d2ff8dbe315494965846"
+        }
+      ],
+      "sourceInfo": "acquired package info from go module information: /bin/fzf",
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "copyrightText": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "SECURITY",
+          "referenceType": "cpe23Type",
+          "referenceLocator": "cpe:2.3:a:mattn:go-isatty:v0.0.20:*:*:*:*:*:*:*"
+        },
+        {
+          "referenceCategory": "SECURITY",
+          "referenceType": "cpe23Type",
+          "referenceLocator": "cpe:2.3:a:mattn:go_isatty:v0.0.20:*:*:*:*:*:*:*"
+        },
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:golang/github.com/mattn/go-isatty@v0.0.20"
+        }
+      ]
+    },
+    {
+      "name": "github.com/rivo/uniseg",
+      "SPDXID": "SPDXRef-Package-go-module-github.com-rivo-uniseg-6a5c732203613dbd",
+      "versionInfo": "v0.4.7",
+      "supplier": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "59476f916f2e121ad87cb0b8673769236cedc4fd48e7cdbee3d39ce4cabae154"
+        }
+      ],
+      "sourceInfo": "acquired package info from go module information: /bin/fzf",
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "copyrightText": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "SECURITY",
+          "referenceType": "cpe23Type",
+          "referenceLocator": "cpe:2.3:a:rivo:uniseg:v0.4.7:*:*:*:*:*:*:*"
+        },
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:golang/github.com/rivo/uniseg@v0.4.7"
+        }
+      ]
+    },
+    {
+      "name": "github.com/rogpeppe/go-internal",
+      "SPDXID": "SPDXRef-Package-go-module-github.com-rogpeppe-go-internal-5096c3b67d7212b9",
+      "versionInfo": "v1.13.1",
+      "supplier": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "2af3b50cb2bf0d1374eec4352d0292731c9926e36779d439ff0292477f255082"
+        }
+      ],
+      "sourceInfo": "acquired package info from go module information: /bin/shfmt",
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "copyrightText": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "SECURITY",
+          "referenceType": "cpe23Type",
+          "referenceLocator": "cpe:2.3:a:rogpeppe:go-internal:v1.13.1:*:*:*:*:*:*:*"
+        },
+        {
+          "referenceCategory": "SECURITY",
+          "referenceType": "cpe23Type",
+          "referenceLocator": "cpe:2.3:a:rogpeppe:go_internal:v1.13.1:*:*:*:*:*:*:*"
+        },
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:golang/github.com/rogpeppe/go-internal@v1.13.1"
+        }
+      ]
+    },
+    {
+      "name": "golang.org/x/sys",
+      "SPDXID": "SPDXRef-Package-go-module-golang.org-x-sys-283c8e8eb54867a1",
+      "versionInfo": "v0.26.0",
+      "supplier": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "2878c227275d5f42e84936f727ebd6a6ea4ff69d28ce792a564fc87e3ca665ba"
+        }
+      ],
+      "sourceInfo": "acquired package info from go module information: /bin/shfmt",
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "copyrightText": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "SECURITY",
+          "referenceType": "cpe23Type",
+          "referenceLocator": "cpe:2.3:a:golang:x\\/sys:v0.26.0:*:*:*:*:*:*:*"
+        },
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:golang/golang.org/x/sys@v0.26.0"
+        }
+      ]
+    },
+    {
+      "name": "golang.org/x/sys",
+      "SPDXID": "SPDXRef-Package-go-module-golang.org-x-sys-4d1019f4e9c5f912",
+      "versionInfo": "v0.27.0",
+      "supplier": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "c01a9ff03bec63d63fd8ff2001f3c311836e4b7d09e253c72715d26ff9c967eb"
+        }
+      ],
+      "sourceInfo": "acquired package info from go module information: /bin/fzf",
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "copyrightText": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "SECURITY",
+          "referenceType": "cpe23Type",
+          "referenceLocator": "cpe:2.3:a:golang:x\\/sys:v0.27.0:*:*:*:*:*:*:*"
+        },
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:golang/golang.org/x/sys@v0.27.0"
+        }
+      ]
+    },
+    {
+      "name": "golang.org/x/term",
+      "SPDXID": "SPDXRef-Package-go-module-golang.org-x-term-344b4ee927e6bddf",
+      "versionInfo": "v0.25.0",
+      "supplier": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "5ad1c8fe5b70e0dbd2522839280473f61e76d50bd10bc46617f72e62a89f536e"
+        }
+      ],
+      "sourceInfo": "acquired package info from go module information: /bin/shfmt",
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "copyrightText": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "SECURITY",
+          "referenceType": "cpe23Type",
+          "referenceLocator": "cpe:2.3:a:golang:x\\/term:v0.25.0:*:*:*:*:*:*:*"
+        },
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:golang/golang.org/x/term@v0.25.0"
+        }
+      ]
+    },
+    {
+      "name": "golang.org/x/term",
+      "SPDXID": "SPDXRef-Package-go-module-golang.org-x-term-268f651dac7f743a",
+      "versionInfo": "v0.26.0",
+      "supplier": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "58441ae95dc68dafc184dc60e78d21062a7f924698b51837731838a174b0e005"
+        }
+      ],
+      "sourceInfo": "acquired package info from go module information: /bin/fzf",
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "copyrightText": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "SECURITY",
+          "referenceType": "cpe23Type",
+          "referenceLocator": "cpe:2.3:a:golang:x\\/term:v0.26.0:*:*:*:*:*:*:*"
+        },
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:golang/golang.org/x/term@v0.26.0"
+        }
+      ]
+    },
+    {
+      "name": "jq",
+      "SPDXID": "SPDXRef-Package-binary-jq-ea7afcaefd655338",
+      "versionInfo": "1.7.1",
+      "supplier": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "sourceInfo": "acquired package info from the following paths: /bin/jq",
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "copyrightText": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "SECURITY",
+          "referenceType": "cpe23Type",
+          "referenceLocator": "cpe:2.3:a:jqlang:jq:1.7.1:*:*:*:*:*:*:*"
+        },
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:generic/jq@1.7.1"
+        }
+      ]
+    },
+    {
+      "name": "mvdan.cc/editorconfig",
+      "SPDXID": "SPDXRef-Package-go-module-mvdan.cc-editorconfig-0f7c941488cbdb50",
+      "versionInfo": "v0.3.0",
+      "supplier": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "checksums": [
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "0f50f6c0b604606a5ac164f94a9339a518af8048178ed117c02f4c5a1118d204"
+        }
+      ],
+      "sourceInfo": "acquired package info from go module information: /bin/shfmt",
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "copyrightText": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:golang/mvdan.cc/editorconfig@v0.3.0"
+        }
+      ]
+    },
+    {
+      "name": "mvdan.cc/sh/v3",
+      "SPDXID": "SPDXRef-Package-go-module-mvdan.cc-sh-v3-fe0012f7d58fba10",
+      "versionInfo": "v0.0.0-20241020204033-392da98b0385",
+      "supplier": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "sourceInfo": "acquired package info from go module information: /bin/shfmt",
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "copyrightText": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "SECURITY",
+          "referenceType": "cpe23Type",
+          "referenceLocator": "cpe:2.3:a:sh:v3:v0.0.0-20241020204033-392da98b0385:*:*:*:*:*:*:*"
+        },
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:golang/mvdan.cc/sh/v3@v0.0.0-20241020204033-392da98b0385"
+        }
+      ]
+    },
+    {
+      "name": "stdlib",
+      "SPDXID": "SPDXRef-Package-go-module-stdlib-475bb643d0009057",
+      "versionInfo": "go1.20.13",
+      "supplier": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "sourceInfo": "acquired package info from go module information: /bin/fzf",
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "BSD-3-Clause",
+      "copyrightText": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "SECURITY",
+          "referenceType": "cpe23Type",
+          "referenceLocator": "cpe:2.3:a:golang:go:1.20.13:-:*:*:*:*:*:*"
+        },
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:golang/stdlib@1.20.13"
+        }
+      ]
+    },
+    {
+      "name": "stdlib",
+      "SPDXID": "SPDXRef-Package-go-module-stdlib-8fda4e126f297403",
+      "versionInfo": "go1.23.2",
+      "supplier": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "sourceInfo": "acquired package info from go module information: /bin/shfmt",
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "BSD-3-Clause",
+      "copyrightText": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "SECURITY",
+          "referenceType": "cpe23Type",
+          "referenceLocator": "cpe:2.3:a:golang:go:1.23.2:-:*:*:*:*:*:*"
+        },
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:golang/stdlib@1.23.2"
+        }
+      ]
+    },
+    {
+      "name": ".devcontainer/features/laingville-cli-tools",
+      "SPDXID": "SPDXRef-DocumentRoot-Directory-.devcontainer-features-laingville-cli-tools",
+      "supplier": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "copyrightText": "NOASSERTION",
+      "primaryPackagePurpose": "FILE"
+    }
+  ],
+  "files": [
+    {
+      "fileName": "bin/bat",
+      "SPDXID": "SPDXRef-File-bin-bat-b4b66838b478383b",
+      "checksums": [
+        {
+          "algorithm": "SHA1",
+          "checksumValue": "0000000000000000000000000000000000000000"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "licenseInfoInFiles": [
+        "NOASSERTION"
+      ],
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "bin/fd",
+      "SPDXID": "SPDXRef-File-bin-fd-4fe5f3c97236a2ac",
+      "checksums": [
+        {
+          "algorithm": "SHA1",
+          "checksumValue": "0000000000000000000000000000000000000000"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "licenseInfoInFiles": [
+        "NOASSERTION"
+      ],
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "bin/fzf",
+      "SPDXID": "SPDXRef-File-bin-fzf-4c7764436f023e1e",
+      "fileTypes": [
+        "APPLICATION",
+        "BINARY"
+      ],
+      "checksums": [
+        {
+          "algorithm": "SHA1",
+          "checksumValue": "f8b095dcccf80cdd54a3ec03aaf38d7872d20abf"
+        },
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "5827ba82532542cb23f8771f62cb237fb828b3b260027c91cb74472b61079456"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "licenseInfoInFiles": [
+        "NOASSERTION"
+      ],
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "bin/jq",
+      "SPDXID": "SPDXRef-File-bin-jq-f95d2b6307b6e40a",
+      "fileTypes": [
+        "APPLICATION",
+        "BINARY"
+      ],
+      "checksums": [
+        {
+          "algorithm": "SHA1",
+          "checksumValue": "93b97cad19f57d122abc584aa215c7fb8b4f34bb"
+        },
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "5942c9b0934e510ee61eb3e30273f1b3fe2590df93933a93d7c58b81d19c8ff5"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "licenseInfoInFiles": [
+        "NOASSERTION"
+      ],
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "bin/just",
+      "SPDXID": "SPDXRef-File-bin-just-9d8d1c4bb0b86bba",
+      "checksums": [
+        {
+          "algorithm": "SHA1",
+          "checksumValue": "0000000000000000000000000000000000000000"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "licenseInfoInFiles": [
+        "NOASSERTION"
+      ],
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "bin/rg",
+      "SPDXID": "SPDXRef-File-bin-rg-21546a7092ed6868",
+      "checksums": [
+        {
+          "algorithm": "SHA1",
+          "checksumValue": "0000000000000000000000000000000000000000"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "licenseInfoInFiles": [
+        "NOASSERTION"
+      ],
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "bin/shellcheck",
+      "SPDXID": "SPDXRef-File-bin-shellcheck-3bb84f89705a100f",
+      "checksums": [
+        {
+          "algorithm": "SHA1",
+          "checksumValue": "0000000000000000000000000000000000000000"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "licenseInfoInFiles": [
+        "NOASSERTION"
+      ],
+      "copyrightText": "NOASSERTION"
+    },
+    {
+      "fileName": "bin/shfmt",
+      "SPDXID": "SPDXRef-File-bin-shfmt-1583bfbe48b5ddd5",
+      "fileTypes": [
+        "APPLICATION",
+        "BINARY"
+      ],
+      "checksums": [
+        {
+          "algorithm": "SHA1",
+          "checksumValue": "ffdbfbe8e78104c4b8971ae6f29fb75fc7da8aa0"
+        },
+        {
+          "algorithm": "SHA256",
+          "checksumValue": "1f57a384d59542f8fac5f503da1f3ea44242f46dff969569e80b524d64b71dbc"
+        }
+      ],
+      "licenseConcluded": "NOASSERTION",
+      "licenseInfoInFiles": [
+        "NOASSERTION"
+      ],
+      "copyrightText": "NOASSERTION"
+    }
+  ],
+  "relationships": [
+    {
+      "spdxElementId": "SPDXRef-Package-go-module-mvdan.cc-editorconfig-0f7c941488cbdb50",
+      "relatedSpdxElement": "SPDXRef-Package-go-module-mvdan.cc-sh-v3-fe0012f7d58fba10",
+      "relationshipType": "DEPENDENCY_OF"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-go-module-github.com-mattn-go-isatty-10c2c13eaf183101",
+      "relatedSpdxElement": "SPDXRef-Package-go-module-github.com-junegunn-fzf-94c3d35f05269dfa",
+      "relationshipType": "DEPENDENCY_OF"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-go-module-golang.org-x-term-268f651dac7f743a",
+      "relatedSpdxElement": "SPDXRef-Package-go-module-github.com-junegunn-fzf-94c3d35f05269dfa",
+      "relationshipType": "DEPENDENCY_OF"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-go-module-golang.org-x-sys-283c8e8eb54867a1",
+      "relatedSpdxElement": "SPDXRef-Package-go-module-mvdan.cc-sh-v3-fe0012f7d58fba10",
+      "relationshipType": "DEPENDENCY_OF"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-go-module-golang.org-x-term-344b4ee927e6bddf",
+      "relatedSpdxElement": "SPDXRef-Package-go-module-mvdan.cc-sh-v3-fe0012f7d58fba10",
+      "relationshipType": "DEPENDENCY_OF"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-go-module-github.com-google-renameio-v2-40bb643e659ee4ab",
+      "relatedSpdxElement": "SPDXRef-Package-go-module-mvdan.cc-sh-v3-fe0012f7d58fba10",
+      "relationshipType": "DEPENDENCY_OF"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-go-module-github.com-junegunn-go-shellwords-4458eefe2836b971",
+      "relatedSpdxElement": "SPDXRef-Package-go-module-github.com-junegunn-fzf-94c3d35f05269dfa",
+      "relationshipType": "DEPENDENCY_OF"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-go-module-stdlib-475bb643d0009057",
+      "relatedSpdxElement": "SPDXRef-Package-go-module-github.com-junegunn-fzf-94c3d35f05269dfa",
+      "relationshipType": "DEPENDENCY_OF"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-go-module-golang.org-x-sys-4d1019f4e9c5f912",
+      "relatedSpdxElement": "SPDXRef-Package-go-module-github.com-junegunn-fzf-94c3d35f05269dfa",
+      "relationshipType": "DEPENDENCY_OF"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-go-module-github.com-rogpeppe-go-internal-5096c3b67d7212b9",
+      "relatedSpdxElement": "SPDXRef-Package-go-module-mvdan.cc-sh-v3-fe0012f7d58fba10",
+      "relationshipType": "DEPENDENCY_OF"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-go-module-github.com-rivo-uniseg-6a5c732203613dbd",
+      "relatedSpdxElement": "SPDXRef-Package-go-module-github.com-junegunn-fzf-94c3d35f05269dfa",
+      "relationshipType": "DEPENDENCY_OF"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-go-module-stdlib-8fda4e126f297403",
+      "relatedSpdxElement": "SPDXRef-Package-go-module-mvdan.cc-sh-v3-fe0012f7d58fba10",
+      "relationshipType": "DEPENDENCY_OF"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-go-module-github.com-charlievieth-fastwalk-b2b10b92cbe861a9",
+      "relatedSpdxElement": "SPDXRef-Package-go-module-github.com-junegunn-fzf-94c3d35f05269dfa",
+      "relationshipType": "DEPENDENCY_OF"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-go-module-mvdan.cc-editorconfig-0f7c941488cbdb50",
+      "relatedSpdxElement": "SPDXRef-File-bin-shfmt-1583bfbe48b5ddd5",
+      "relationshipType": "OTHER",
+      "comment": "evident-by: indicates the package's existence is evident by the given file"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-go-module-github.com-mattn-go-isatty-10c2c13eaf183101",
+      "relatedSpdxElement": "SPDXRef-File-bin-fzf-4c7764436f023e1e",
+      "relationshipType": "OTHER",
+      "comment": "evident-by: indicates the package's existence is evident by the given file"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-go-module-golang.org-x-term-268f651dac7f743a",
+      "relatedSpdxElement": "SPDXRef-File-bin-fzf-4c7764436f023e1e",
+      "relationshipType": "OTHER",
+      "comment": "evident-by: indicates the package's existence is evident by the given file"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-go-module-golang.org-x-sys-283c8e8eb54867a1",
+      "relatedSpdxElement": "SPDXRef-File-bin-shfmt-1583bfbe48b5ddd5",
+      "relationshipType": "OTHER",
+      "comment": "evident-by: indicates the package's existence is evident by the given file"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-go-module-golang.org-x-term-344b4ee927e6bddf",
+      "relatedSpdxElement": "SPDXRef-File-bin-shfmt-1583bfbe48b5ddd5",
+      "relationshipType": "OTHER",
+      "comment": "evident-by: indicates the package's existence is evident by the given file"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-go-module-github.com-google-renameio-v2-40bb643e659ee4ab",
+      "relatedSpdxElement": "SPDXRef-File-bin-shfmt-1583bfbe48b5ddd5",
+      "relationshipType": "OTHER",
+      "comment": "evident-by: indicates the package's existence is evident by the given file"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-go-module-github.com-junegunn-go-shellwords-4458eefe2836b971",
+      "relatedSpdxElement": "SPDXRef-File-bin-fzf-4c7764436f023e1e",
+      "relationshipType": "OTHER",
+      "comment": "evident-by: indicates the package's existence is evident by the given file"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-go-module-stdlib-475bb643d0009057",
+      "relatedSpdxElement": "SPDXRef-File-bin-fzf-4c7764436f023e1e",
+      "relationshipType": "OTHER",
+      "comment": "evident-by: indicates the package's existence is evident by the given file"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-go-module-golang.org-x-sys-4d1019f4e9c5f912",
+      "relatedSpdxElement": "SPDXRef-File-bin-fzf-4c7764436f023e1e",
+      "relationshipType": "OTHER",
+      "comment": "evident-by: indicates the package's existence is evident by the given file"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-go-module-github.com-rogpeppe-go-internal-5096c3b67d7212b9",
+      "relatedSpdxElement": "SPDXRef-File-bin-shfmt-1583bfbe48b5ddd5",
+      "relationshipType": "OTHER",
+      "comment": "evident-by: indicates the package's existence is evident by the given file"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-go-module-github.com-rivo-uniseg-6a5c732203613dbd",
+      "relatedSpdxElement": "SPDXRef-File-bin-fzf-4c7764436f023e1e",
+      "relationshipType": "OTHER",
+      "comment": "evident-by: indicates the package's existence is evident by the given file"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-go-module-stdlib-8fda4e126f297403",
+      "relatedSpdxElement": "SPDXRef-File-bin-shfmt-1583bfbe48b5ddd5",
+      "relationshipType": "OTHER",
+      "comment": "evident-by: indicates the package's existence is evident by the given file"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-go-module-github.com-junegunn-fzf-94c3d35f05269dfa",
+      "relatedSpdxElement": "SPDXRef-File-bin-fzf-4c7764436f023e1e",
+      "relationshipType": "OTHER",
+      "comment": "evident-by: indicates the package's existence is evident by the given file"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-go-module-github.com-charlievieth-fastwalk-b2b10b92cbe861a9",
+      "relatedSpdxElement": "SPDXRef-File-bin-fzf-4c7764436f023e1e",
+      "relationshipType": "OTHER",
+      "comment": "evident-by: indicates the package's existence is evident by the given file"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-binary-jq-ea7afcaefd655338",
+      "relatedSpdxElement": "SPDXRef-File-bin-jq-f95d2b6307b6e40a",
+      "relationshipType": "OTHER",
+      "comment": "evident-by: indicates the package's existence is evident by the given file"
+    },
+    {
+      "spdxElementId": "SPDXRef-Package-go-module-mvdan.cc-sh-v3-fe0012f7d58fba10",
+      "relatedSpdxElement": "SPDXRef-File-bin-shfmt-1583bfbe48b5ddd5",
+      "relationshipType": "OTHER",
+      "comment": "evident-by: indicates the package's existence is evident by the given file"
+    },
+    {
+      "spdxElementId": "SPDXRef-DocumentRoot-Directory-.devcontainer-features-laingville-cli-tools",
+      "relatedSpdxElement": "SPDXRef-Package-go-module-github.com-charlievieth-fastwalk-b2b10b92cbe861a9",
+      "relationshipType": "CONTAINS"
+    },
+    {
+      "spdxElementId": "SPDXRef-DocumentRoot-Directory-.devcontainer-features-laingville-cli-tools",
+      "relatedSpdxElement": "SPDXRef-Package-go-module-github.com-google-renameio-v2-40bb643e659ee4ab",
+      "relationshipType": "CONTAINS"
+    },
+    {
+      "spdxElementId": "SPDXRef-DocumentRoot-Directory-.devcontainer-features-laingville-cli-tools",
+      "relatedSpdxElement": "SPDXRef-Package-go-module-github.com-junegunn-fzf-94c3d35f05269dfa",
+      "relationshipType": "CONTAINS"
+    },
+    {
+      "spdxElementId": "SPDXRef-DocumentRoot-Directory-.devcontainer-features-laingville-cli-tools",
+      "relatedSpdxElement": "SPDXRef-Package-go-module-github.com-junegunn-go-shellwords-4458eefe2836b971",
+      "relationshipType": "CONTAINS"
+    },
+    {
+      "spdxElementId": "SPDXRef-DocumentRoot-Directory-.devcontainer-features-laingville-cli-tools",
+      "relatedSpdxElement": "SPDXRef-Package-go-module-github.com-mattn-go-isatty-10c2c13eaf183101",
+      "relationshipType": "CONTAINS"
+    },
+    {
+      "spdxElementId": "SPDXRef-DocumentRoot-Directory-.devcontainer-features-laingville-cli-tools",
+      "relatedSpdxElement": "SPDXRef-Package-go-module-github.com-rivo-uniseg-6a5c732203613dbd",
+      "relationshipType": "CONTAINS"
+    },
+    {
+      "spdxElementId": "SPDXRef-DocumentRoot-Directory-.devcontainer-features-laingville-cli-tools",
+      "relatedSpdxElement": "SPDXRef-Package-go-module-github.com-rogpeppe-go-internal-5096c3b67d7212b9",
+      "relationshipType": "CONTAINS"
+    },
+    {
+      "spdxElementId": "SPDXRef-DocumentRoot-Directory-.devcontainer-features-laingville-cli-tools",
+      "relatedSpdxElement": "SPDXRef-Package-go-module-golang.org-x-sys-283c8e8eb54867a1",
+      "relationshipType": "CONTAINS"
+    },
+    {
+      "spdxElementId": "SPDXRef-DocumentRoot-Directory-.devcontainer-features-laingville-cli-tools",
+      "relatedSpdxElement": "SPDXRef-Package-go-module-golang.org-x-sys-4d1019f4e9c5f912",
+      "relationshipType": "CONTAINS"
+    },
+    {
+      "spdxElementId": "SPDXRef-DocumentRoot-Directory-.devcontainer-features-laingville-cli-tools",
+      "relatedSpdxElement": "SPDXRef-Package-go-module-golang.org-x-term-344b4ee927e6bddf",
+      "relationshipType": "CONTAINS"
+    },
+    {
+      "spdxElementId": "SPDXRef-DocumentRoot-Directory-.devcontainer-features-laingville-cli-tools",
+      "relatedSpdxElement": "SPDXRef-Package-go-module-golang.org-x-term-268f651dac7f743a",
+      "relationshipType": "CONTAINS"
+    },
+    {
+      "spdxElementId": "SPDXRef-DocumentRoot-Directory-.devcontainer-features-laingville-cli-tools",
+      "relatedSpdxElement": "SPDXRef-Package-binary-jq-ea7afcaefd655338",
+      "relationshipType": "CONTAINS"
+    },
+    {
+      "spdxElementId": "SPDXRef-DocumentRoot-Directory-.devcontainer-features-laingville-cli-tools",
+      "relatedSpdxElement": "SPDXRef-Package-go-module-mvdan.cc-editorconfig-0f7c941488cbdb50",
+      "relationshipType": "CONTAINS"
+    },
+    {
+      "spdxElementId": "SPDXRef-DocumentRoot-Directory-.devcontainer-features-laingville-cli-tools",
+      "relatedSpdxElement": "SPDXRef-Package-go-module-mvdan.cc-sh-v3-fe0012f7d58fba10",
+      "relationshipType": "CONTAINS"
+    },
+    {
+      "spdxElementId": "SPDXRef-DocumentRoot-Directory-.devcontainer-features-laingville-cli-tools",
+      "relatedSpdxElement": "SPDXRef-Package-go-module-stdlib-475bb643d0009057",
+      "relationshipType": "CONTAINS"
+    },
+    {
+      "spdxElementId": "SPDXRef-DocumentRoot-Directory-.devcontainer-features-laingville-cli-tools",
+      "relatedSpdxElement": "SPDXRef-Package-go-module-stdlib-8fda4e126f297403",
+      "relationshipType": "CONTAINS"
+    },
+    {
+      "spdxElementId": "SPDXRef-DOCUMENT",
+      "relatedSpdxElement": "SPDXRef-DocumentRoot-Directory-.devcontainer-features-laingville-cli-tools",
+      "relationshipType": "DESCRIBES"
+    }
+  ]
+}

@@ -118,7 +118,8 @@ jobs:
           
           syft dir:"${FEATURE_DIR}" -o spdx-json > sbom.spdx.json
           cosign attest --yes --predicate sbom.spdx.json --type spdx "${FEATURE_BASE}:${VERSION}"
-          echo "✓ SBOM attached"
+          cosign attest --yes --predicate sbom.spdx.json --type spdx "${FEATURE_BASE}:latest"
+          echo "✓ SBOM attached to :${VERSION} and :latest"
 
       - name: Upload SBOM artifact
         if: (github.event_name == 'push' || github.event_name == 'workflow_dispatch') && github.ref == 'refs/heads/main'
@@ -204,13 +205,14 @@ jobs:
 
       - name: Verify and print SBOM attestation
         run: |
+          set -o pipefail
           echo "=== Verifying SBOM attestation ==="
           cosign verify-attestation \
             --type spdx \
             --certificate-identity-regexp="https://github.com/mrdavidlaing/laingville-devcontainer-ubuntu/.*" \
             --certificate-oidc-issuer="https://token.actions.githubusercontent.com" \
             ghcr.io/mrdavidlaing/laingville-devcontainer-ubuntu/features/laingville-cli-tools:latest \
-            | jq -r '.payload' | base64 -d | jq '.predicate' > sbom.json
+            | tee attestation.json | jq -r '.payload' | base64 -d | jq '.predicate' > sbom.json
           echo "✓ SBOM attestation verified"
           
           echo ""

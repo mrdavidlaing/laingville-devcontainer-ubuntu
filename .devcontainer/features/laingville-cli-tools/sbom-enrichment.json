@@ -1,0 +1,19 @@
+{
+  "packages": {
+    "jq": {
+      "licenseDeclared": "MIT",
+      "licenseConcluded": "MIT",
+      "sourceInfo": "https://github.com/jqlang/jq/blob/jq-1.7.1/COPYING"
+    },
+    "github.com/junegunn/fzf": {
+      "licenseDeclared": "MIT",
+      "licenseConcluded": "MIT",
+      "sourceInfo": "https://github.com/junegunn/fzf/blob/v0.56.3/LICENSE"
+    },
+    "mvdan.cc/sh/v3": {
+      "licenseDeclared": "BSD-3-Clause",
+      "licenseConcluded": "BSD-3-Clause",
+      "sourceInfo": "https://github.com/mvdan/sh/blob/v3.10.0/LICENSE"
+    }
+  }
+}

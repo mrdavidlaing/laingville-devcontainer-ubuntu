@@ -122,8 +122,13 @@ jobs:
           syft dir:"${FEATURE_DIR}" \
             -o spdx-json > sbom.spdx.json
           
-          echo "=== SBOM License Summary ==="
+          echo "=== SBOM License Summary (before enrichment) ==="
           jq -r '.packages[] | "\(.name): \(.licenseConcluded // .licenseDeclared // "NOASSERTION")"' sbom.spdx.json || true
+          
+          if [ -f "${FEATURE_DIR}/enrich-sbom.sh" ] && [ -f "${FEATURE_DIR}/sbom-enrichment.json" ]; then
+            echo ""
+            bash "${FEATURE_DIR}/enrich-sbom.sh" sbom.spdx.json "${FEATURE_DIR}/sbom-enrichment.json"
+          fi
           
           cosign attest --yes --predicate sbom.spdx.json --type spdx "${FEATURE_BASE}:${VERSION}"
           cosign attest --yes --predicate sbom.spdx.json --type spdx "${FEATURE_BASE}:latest"

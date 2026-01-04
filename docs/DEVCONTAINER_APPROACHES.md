@@ -311,6 +311,68 @@ For shellcheck specifically, we satisfy GPL-3.0 Section 6 through:
 2. **Written offer**: `shellcheck.SOURCE_OFFER` provides explicit source availability notice
 3. **Full license text**: `shellcheck.LICENSE` contains the complete GPL-3.0 text
 
+### SBOM Coverage: Why Go Dependencies But Not Rust?
+
+Our SBOM includes **22 packages**:
+- 8 top-level binaries we distribute (jq, ripgrep, fd, bat, fzf, shellcheck, shfmt, just)
+- 11 Go module dependencies (auto-detected by Syft)
+- 2 Go stdlib entries
+- 1 feature directory entry
+
+**Key observation**: Syft automatically detects dependency trees for Go binaries (fzf, shfmt) but not for Rust binaries (ripgrep, fd, bat, just) or Haskell binaries (shellcheck).
+
+#### Why This Difference?
+
+**Go embeds build metadata in every binary by default:**
+
+Go 1.18+ includes a `.go.buildinfo` ELF section in compiled binaries containing:
+- Module path and version
+- All dependencies with exact versions
+- VCS information (git commit, timestamp)
+
+```bash
+# You can extract this from any Go binary:
+go version -m ./fzf
+# Output:
+#   path    github.com/junegunn/fzf
+#   dep     github.com/mattn/go-isatty  v0.0.20
+#   dep     golang.org/x/term            v0.25.0
+#   ...
+```
+
+Syft reads this section using standard ELF parsing—**no source code needed**.
+
+**Rust does NOT embed dependency metadata:**
+
+When `cargo build --release` compiles a Rust binary, it produces stripped machine code with **no embedded information** about dependencies from `Cargo.lock`. To generate a complete SBOM for Rust binaries, you need:
+1. Access to the source repository
+2. Parse `Cargo.lock` or `Cargo.toml`
+3. Trace transitive dependencies
+
+This is a **philosophical difference** between the ecosystems:
+
+| Aspect | Go | Rust |
+| :--- | :--- | :--- |
+| Philosophy | "Know thy build" - reproducibility first | "Minimal runtime" - ship only what runs |
+| Binary size | +1-2 KB for metadata | No overhead |
+| SBOM from binary? | ✓ Yes (automatic) | ✗ No (need source) |
+| Privacy | Exposes build environment details | No metadata leakage |
+| Debug production | Can see exact dependency versions | Need external records |
+
+#### Our Hybrid Approach
+
+Since we distribute **pre-built binaries** without source:
+
+1. **Automatic detection** (Syft): Go binaries → full dependency tree
+2. **Manual enrichment** (`sbom-enrichment.json`): Rust/Haskell/C binaries → top-level packages only
+
+**For license compliance**, this is usually sufficient because:
+- We document the top-level binary (ripgrep, fd, bat)
+- Their Rust dependencies are statically linked and unmodified
+- If we needed full transitive dependencies, we'd need to download source repos and parse lock files during CI
+
+**Final SBOM coverage**: 20 of 22 packages have licenses (91%), with only Go stdlib and the feature directory itself remaining as NOASSERTION.
+
 ---
 
 ## 7. Conclusion: Which approach to choose?

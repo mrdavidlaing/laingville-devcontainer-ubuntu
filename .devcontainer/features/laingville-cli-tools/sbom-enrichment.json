@@ -3,7 +3,8 @@
     "jq": {
       "licenseDeclared": "MIT",
       "licenseConcluded": "MIT",
-      "sourceInfo": "https://github.com/jqlang/jq/blob/jq-1.7.1/COPYING"
+      "sourceInfo": "https://github.com/jqlang/jq/blob/jq-1.7.1/COPYING",
+      "versionInfo": "1.7.1"
     },
     "github.com/junegunn/fzf": {
       "licenseDeclared": "MIT",
@@ -14,6 +15,46 @@
       "licenseDeclared": "BSD-3-Clause",
       "licenseConcluded": "BSD-3-Clause",
       "sourceInfo": "https://github.com/mvdan/sh/blob/v3.10.0/LICENSE"
+    },
+    "ripgrep": {
+      "licenseDeclared": "MIT OR Unlicense",
+      "licenseConcluded": "MIT",
+      "sourceInfo": "https://github.com/BurntSushi/ripgrep/blob/14.1.1/LICENSE-MIT",
+      "versionInfo": "14.1.1",
+      "supplier": "Organization: BurntSushi",
+      "downloadLocation": "https://github.com/BurntSushi/ripgrep/releases/download/14.1.1/ripgrep-14.1.1-x86_64-unknown-linux-musl.tar.gz"
+    },
+    "fd": {
+      "licenseDeclared": "MIT OR Apache-2.0",
+      "licenseConcluded": "MIT",
+      "sourceInfo": "https://github.com/sharkdp/fd/blob/v10.2.0/LICENSE-MIT",
+      "versionInfo": "10.2.0",
+      "supplier": "Organization: sharkdp",
+      "downloadLocation": "https://github.com/sharkdp/fd/releases/download/v10.2.0/fd-v10.2.0-x86_64-unknown-linux-musl.tar.gz"
+    },
+    "bat": {
+      "licenseDeclared": "MIT OR Apache-2.0",
+      "licenseConcluded": "MIT",
+      "sourceInfo": "https://github.com/sharkdp/bat/blob/v0.24.0/LICENSE-MIT",
+      "versionInfo": "0.24.0",
+      "supplier": "Organization: sharkdp",
+      "downloadLocation": "https://github.com/sharkdp/bat/releases/download/v0.24.0/bat-v0.24.0-x86_64-unknown-linux-musl.tar.gz"
+    },
+    "shellcheck": {
+      "licenseDeclared": "GPL-3.0-or-later",
+      "licenseConcluded": "GPL-3.0-or-later",
+      "sourceInfo": "https://github.com/koalaman/shellcheck/blob/v0.10.0/LICENSE",
+      "versionInfo": "0.10.0",
+      "supplier": "Organization: koalaman",
+      "downloadLocation": "https://github.com/koalaman/shellcheck/releases/download/v0.10.0/shellcheck-v0.10.0.linux.x86_64.tar.xz"
+    },
+    "just": {
+      "licenseDeclared": "CC0-1.0",
+      "licenseConcluded": "CC0-1.0",
+      "sourceInfo": "https://github.com/casey/just/blob/1.36.0/LICENSE",
+      "versionInfo": "1.36.0",
+      "supplier": "Organization: casey",
+      "downloadLocation": "https://github.com/casey/just/releases/download/1.36.0/just-1.36.0-x86_64-unknown-linux-musl.tar.gz"
     }
   }
 }

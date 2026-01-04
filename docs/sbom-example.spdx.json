@@ -3,14 +3,14 @@
   "dataLicense": "CC0-1.0",
   "SPDXID": "SPDXRef-DOCUMENT",
   "name": ".devcontainer/features/laingville-cli-tools",
-  "documentNamespace": "https://anchore.com/syft/dir/.devcontainer/features/laingville-cli-tools-2104f4e8-e68b-48ab-9a86-ce75c0e3cfa3",
+  "documentNamespace": "https://anchore.com/syft/dir/.devcontainer/features/laingville-cli-tools-ad4e16e6-7e71-4a05-b144-091e6b01fa0b",
   "creationInfo": {
     "licenseListVersion": "3.27",
     "creators": [
       "Organization: Anchore, Inc",
       "Tool: syft-1.39.0"
     ],
-    "created": "2026-01-04T12:10:03Z"
+    "created": "2026-01-04T12:18:10Z"
   },
   "packages": [
     {
@@ -486,6 +486,66 @@
       "licenseDeclared": "NOASSERTION",
       "copyrightText": "NOASSERTION",
       "primaryPackagePurpose": "FILE"
+    },
+    {
+      "name": "ripgrep",
+      "SPDXID": "SPDXRef-Package-ripgrep",
+      "versionInfo": "14.1.1",
+      "supplier": "Organization: BurntSushi",
+      "downloadLocation": "https://github.com/BurntSushi/ripgrep/releases/download/14.1.1/ripgrep-14.1.1-x86_64-unknown-linux-musl.tar.gz",
+      "filesAnalyzed": false,
+      "licenseConcluded": "MIT",
+      "licenseDeclared": "MIT OR Unlicense",
+      "copyrightText": "NOASSERTION",
+      "comment": "License source: https://github.com/BurntSushi/ripgrep/blob/14.1.1/LICENSE-MIT"
+    },
+    {
+      "name": "fd",
+      "SPDXID": "SPDXRef-Package-fd",
+      "versionInfo": "10.2.0",
+      "supplier": "Organization: sharkdp",
+      "downloadLocation": "https://github.com/sharkdp/fd/releases/download/v10.2.0/fd-v10.2.0-x86_64-unknown-linux-musl.tar.gz",
+      "filesAnalyzed": false,
+      "licenseConcluded": "MIT",
+      "licenseDeclared": "MIT OR Apache-2.0",
+      "copyrightText": "NOASSERTION",
+      "comment": "License source: https://github.com/sharkdp/fd/blob/v10.2.0/LICENSE-MIT"
+    },
+    {
+      "name": "bat",
+      "SPDXID": "SPDXRef-Package-bat",
+      "versionInfo": "0.24.0",
+      "supplier": "Organization: sharkdp",
+      "downloadLocation": "https://github.com/sharkdp/bat/releases/download/v0.24.0/bat-v0.24.0-x86_64-unknown-linux-musl.tar.gz",
+      "filesAnalyzed": false,
+      "licenseConcluded": "MIT",
+      "licenseDeclared": "MIT OR Apache-2.0",
+      "copyrightText": "NOASSERTION",
+      "comment": "License source: https://github.com/sharkdp/bat/blob/v0.24.0/LICENSE-MIT"
+    },
+    {
+      "name": "shellcheck",
+      "SPDXID": "SPDXRef-Package-shellcheck",
+      "versionInfo": "0.10.0",
+      "supplier": "Organization: koalaman",
+      "downloadLocation": "https://github.com/koalaman/shellcheck/releases/download/v0.10.0/shellcheck-v0.10.0.linux.x86_64.tar.xz",
+      "filesAnalyzed": false,
+      "licenseConcluded": "GPL-3.0-or-later",
+      "licenseDeclared": "GPL-3.0-or-later",
+      "copyrightText": "NOASSERTION",
+      "comment": "License source: https://github.com/koalaman/shellcheck/blob/v0.10.0/LICENSE"
+    },
+    {
+      "name": "just",
+      "SPDXID": "SPDXRef-Package-just",
+      "versionInfo": "1.36.0",
+      "supplier": "Organization: casey",
+      "downloadLocation": "https://github.com/casey/just/releases/download/1.36.0/just-1.36.0-x86_64-unknown-linux-musl.tar.gz",
+      "filesAnalyzed": false,
+      "licenseConcluded": "CC0-1.0",
+      "licenseDeclared": "CC0-1.0",
+      "copyrightText": "NOASSERTION",
+      "comment": "License source: https://github.com/casey/just/blob/1.36.0/LICENSE"
     }
   ],
   "files": [
